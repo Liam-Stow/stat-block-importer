@@ -1,18 +1,14 @@
 $(document).ready(function () {
     let inputElement = document.getElementById('inputfile');
     inputElement.onchange = function (event) {
-
         let fileReader = new FileReader();
-
         fileReader.onload = () => {
             convert(fileReader.result);
         }
-
         fileReader.readAsText(inputElement.files.item(0));
     }
 })
 
-const LABELLED_ATTRIBUTES_BEGINNING_LINE = 17;
 
 function getWord(textArray, position) {
     let lineIndicies = position[0];
@@ -25,7 +21,6 @@ function getWord(textArray, position) {
 
 function convert(text) {
     let lines = text.split('\r\n'); // Onenote uses carrage returns so we need to consider \r and \n
-    const ACTIONS_BEGINNING_LINE = lines.findIndex(line => line === "ACTIONS ");
 
     $.getJSON("foundryEmptyNPC.json", foundryNPC => {
         // Easy ones
@@ -55,18 +50,15 @@ function convert(text) {
             .map(skill => skillsMap[skill])     // Convert to foundry abbreviations
             .forEach(skill => foundryNPC.data.skills[skill].value = 1); // Save proficiency to output NPC
 
+        // Resistances
+        lines
+            .find(line => line.split(' ').slice(0,2).join(' ') === "Damage Resistances")
+            .split(' ')
+            .slice(2)
+            .filter(word => word !== "") // Get rid of empty words
+            .map(resistance => resistance.replace(/,$/, "")) // Remove comma from end of each damage type
+            .forEach(resistance => foundryNPC.data.traits.dr.value.push(resistance));
 
-
-        let labelledAttributes = ["Skills", "Damage Resistances", "Senses", "Languages", "Challenge"]
-        let labelledAttributeLines = lines.slice(LABELLED_ATTRIBUTES_BEGINNING_LINE, ACTIONS_BEGINNING_LINE);
-        labelledAttributes.forEach(attributeLabel => {
-            let labelWordCount = attributeLabel.split(' ').length;
-            let attributeLine = labelledAttributeLines.find(line => {
-                let words = line.split(' ');
-
-
-            })
-        })
 
         // Abilities
 
