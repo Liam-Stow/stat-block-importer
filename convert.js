@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
     let inputElement = document.getElementById('inputfile');
     inputElement.onchange = function (event) {
@@ -65,10 +66,31 @@ function convert(text) {
             .replace(/^Senses /, "") // Remove the word senses from the string
         foundryNPC.data.traits.senses = senses;
 
+        // Languages
+        const FOUNDRY_DEFAULT_LANGUAGES = ["Aarakocra", "Abyssal", "Aquan", "Auran", "Celestial", "Common", "Deep Speech", "Draconic", "Druidic", "Dwarvish", "Elvish", "Giant", "Gith", "Gnoll", "Gnomish", "Goblin", "Halfling", "Ignan", "Infernal", "Orc", "Primordial", "Sylvan", "Terran", "Thieves' Cant", "Undercommon"]
+        lines
+            .find(line => line.split(' ')[0] === "Languages") 
+            .replace(/^Languages /, "") // Remove the word Languages from the string
+            .replace(/ $/, "") // Remove space at end of line
+            .split(', ')
+            .filter(word => word !== "")
+            .forEach(language => {
+                if (FOUNDRY_DEFAULT_LANGUAGES.includes(language)) {
+                    foundryNPC.data.traits.languages.value.push(lanuage);
+                } else {
+                    foundryNPC.data.traits.languages.custom += language + ';';
+                }
+            });
+        // Remove final semicolon that was added as a seperator
+        foundryNPC.data.traits.languages.custom = foundryNPC.data.traits.languages.custom.replace(/;$/, "") 
+
+
+        // Challenge Rating
+
+        // Abilities
 
         // Actions
-
-
+        
         console.log(foundryNPC)
     })
 

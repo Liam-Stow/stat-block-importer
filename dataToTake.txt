@@ -15,8 +15,8 @@
 ✅CHA 7 (-2)
 
 ✅Skills Perception +1 
-❌Damage Resistances acid, cold, fire, lightning, thunder 
-❌Senses darkvision 60 ft., passive Perception 11 
+✅Damage Resistances acid, cold, fire, lightning, thunder 
+✅Senses darkvision 60 ft., passive Perception 11 
 ❌Languages Slaad, telepathy 60 ft. 
 ❌Challenge 5 
 ❌(1,800 XP) 
