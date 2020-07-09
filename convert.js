@@ -59,8 +59,11 @@ function convert(text) {
             .map(resistance => resistance.replace(/,$/, "")) // Remove comma from end of each damage type
             .forEach(resistance => foundryNPC.data.traits.dr.value.push(resistance));
 
-
-        // Abilities
+        // Senses
+        let senses = lines
+            .find(line => line.split(' ')[0] === "Senses")
+            .replace(/^Senses /, "") // Remove the word senses from the string
+        foundryNPC.data.traits.senses = senses;
 
 
         // Actions
