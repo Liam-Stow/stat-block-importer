@@ -84,8 +84,20 @@ function convert(text) {
         // Remove final semicolon that was added as a seperator
         foundryNPC.data.traits.languages.custom = foundryNPC.data.traits.languages.custom.replace(/;$/, "") 
 
-
         // Challenge Rating
+        let challengeRating = lines
+            .find(line => line.split(' ')[0] === "Challenge") 
+            .split(' ')[1]
+        console.log(challengeRating)
+        foundryNPC.data.details.cr = parseInt(challengeRating);
+
+        // XP
+        let xpValue = lines
+            .find(line => line.split(' ')[0] === "Challenge") 
+            .split(' ')[2]
+            .replace(/,/, '')   // Remove commas from number
+            .replace(/\(/, '')  // Remove bracket from around number
+        foundryNPC.data.details.xp.value = parseInt(xpValue);
 
         // Abilities
 
