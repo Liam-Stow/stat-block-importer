@@ -56,6 +56,47 @@ function getLastItem(indexable) {
 }
 
 
+function isUpperCase(char) {
+    if (!isNaN(char*1))
+        return false; // character is a number
+    if (char === char.toLowerCase())
+        return false; // character is lower case
+    return true; // passed both checks, its upper case
+}
+
+
+// Check if a line starts a new character feature
+// line is a string, returns bool
+function lineStartsFeature(line) {
+    return  ((getLastItem(line[0]) === '.' && isUpperCase(line[0][0])) 
+            || 
+            (getLastItem(line[1]) === '.')  && isUpperCase(line[1][0]));
+}
+
+
+// Takes in the entire block of abilities or actions and gives back an object of feature name to feature description.
+function readFeatures(featuresLines) {
+    let features = {};
+    let featureName = "";
+    let featureDescription = "";
+    featuresLines.forEach(line => {
+        let words = line.split(' ');
+        if  (lineStartsFeature(words)) {
+            if (featureName !== "")
+                features[featureName] = featureDescription;
+            const NAME_END_INDEX = line.indexOf('.'); // Get the index of the first dot
+            featureName = line.slice(0,NAME_END_INDEX); // chars before first dot
+            featureDescription = line.slice(NAME_END_INDEX); // chars after first dot
+        } else {                
+            featureDescription += line;
+        }
+    });
+    features[featureName] = featureDescription;
+
+    return features;
+}
+
+
 function convert(text) {
     const LINES = text.split('\r\n'); // Onenote uses carrage returns so we need to consider \r and \n
     const CHALLENGE_LINE = findLineByStartWord(LINES, "Challenge");
@@ -140,25 +181,27 @@ function convert(text) {
     // Abilities
     $.getJSON("abilityItem.json", emptyAbility => {
         // Parse abilities
+        
+        // let abilities = {};
+        // let abilityName = ""
+        // let abilityText = "";
+        // ABILITY_LINES.forEach(line => {
+        //     // If either of the first two words ends in a full stop, its probably the start of a new ability.
+        //     const WORDS = line.split(' ');
+        //     if (getLastItem(WORDS[0]) === '.' || getLastItem(WORDS[1]) === '.') {
+        //         if (abilityName !== "")
+        //             abilities[abilityName] = abilityText;
+        //         const NAME_END_INDEX = line.indexOf('.'); // Get the index of the first dot
+        //         abilityName = line.slice(0,NAME_END_INDEX); // chars before first dot
+        //         abilityText = line.slice(NAME_END_INDEX); // chars after first dot
+        //     } else {                
+        //         abilityText += line;
+        //     }
+        // });
+        // abilities[abilityName] = abilityText;
+        // console.log(abilities)
         const ABILITY_LINES = LINES.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
-        let abilities = {};
-        let abilityName = ""
-        let abilityText = "";
-        ABILITY_LINES.forEach(line => {
-            // If either of the first two words ends in a full stop, its probably the start of a new ability.
-            const WORDS = line.split(' ');
-            if (getLastItem(WORDS[0]) === '.' || getLastItem(WORDS[1]) === '.') {
-                if (abilityName !== "")
-                    abilities[abilityName] = abilityText;
-                const NAME_END_INDEX = line.indexOf('.'); // Get the index of the first dot
-                abilityName = line.slice(0,NAME_END_INDEX); // chars before first dot
-                abilityText = line.slice(NAME_END_INDEX); // chars after first dot
-            } else {                
-                abilityText += line;
-            }
-        });
-        abilities[abilityName] = abilityText;
-        console.log(abilities)
+        let abilities = readFeatures(ABILITY_LINES);
 
         // Make Foundry Items
         let abilityItems = []
@@ -169,6 +212,20 @@ function convert(text) {
             abilityItems.push(newItem);
         }
         saveJson(abilityItems)
+    })
+
+    // Actions
+    $.getJSON("actionItem.json", emptyAction => {
+        // Parse abilities
+        const ACTION_LINES = LINES.slice(ACTIONS_LINE+1);
+        let actions = readFeatures(ACTION_LINES);
+
+        // Split actions into details
+        for (let actionName in actions) {
+            let details = actions[actionName];
+            console.log(details);
+        }
+
     })
 
     let json = text;
