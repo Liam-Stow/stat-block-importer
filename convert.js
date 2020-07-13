@@ -11,6 +11,17 @@ $(document).ready(function () {
 })
 
 
+// Returns the first N words from a string as a new string
+// remove the last endTrim letters
+function getFirstWords(str, numberOfWords, endTrim=0) {
+    let firstWords = str
+        .split(' ')
+        .slice(0, numberOfWords)
+        .join(' ');
+    return firstWords.slice(0, firstWords.length-endTrim);
+}
+
+
 function getWord(textArray, position) {
     let lineIndicies = position[0];
     let wordIndicies = position[1];
@@ -62,6 +73,14 @@ function isUpperCase(char) {
     if (char === char.toLowerCase())
         return false; // character is lower case
     return true; // passed both checks, its upper case
+}
+
+
+// returns true if str is a type of attack
+function isAttackType(str) {
+    console.log("checking if", str, "is an attack type")
+    const ATTACK_TYPES = ["Melee Weapon Attack", "Ranged Weapon Attack", "Melee Spell Attack", "Ranged Spell Attack"];
+    return ATTACK_TYPES.includes(str);
 }
 
 
@@ -174,7 +193,6 @@ function convert(text) {
             .replace(/\(/, '')  // Remove bracket from around number
         npcData.details.xp.value = parseInt(xpValue);
 
-        console.log(npcData)
         saveJson(npcData);
     })
 
@@ -192,9 +210,6 @@ function convert(text) {
         }
         // saveJson(abilityItems)
     })
-    for (let abilityName in abilities) {
-        console.log(abilities[abilityName])
-    }
 
     // Actions
     const ACTION_LINES = LINES.slice(ACTIONS_LINE+1);
@@ -203,7 +218,15 @@ function convert(text) {
     // Split actions into details
     for (let actionName in actions) {
         let detailsString = actions[actionName];
-        console.log(actions[actionName])
+        if (isAttackType(getFirstWords(detailsString, 3, 1))){
+            actionDetails.type = detailsString.slice(0, detailsString.indexOf(':'))
+            actionDetails.atkBonus = detailsString.match(/(\+|\-)\d+ to hit/)[0].match(/\d+/)[0];
+        } else {
+            actionDetails.description = detailsString;
+        }
+    }
+    for (let detail in actionDetails) {
+        console.log(actionDetails[detail])
     }
     $.getJSON("actionItem.json", emptyAction => {
 
