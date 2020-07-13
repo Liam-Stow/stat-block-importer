@@ -1,0 +1,90 @@
+{
+    "_id": "9MafZomZNc4SVhVJ",
+    "flags": {},
+    "name": "action",
+    "type": "weapon",
+    "img": "icons/svg/mystery-man.svg",
+    "data": {
+      "description": {
+        "value": "",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": "",
+      "quantity": 1,
+      "weight": 0,
+      "price": 0,
+      "attuned": false,
+      "equipped": true,
+      "rarity": "",
+      "identified": true,
+      "activation": {
+        "type": "action",
+        "cost": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "target": {
+        "value": null,
+        "units": "",
+        "type": ""
+      },
+      "range": {
+        "value": null,
+        "long": null,
+        "units": ""
+      },
+      "uses": {
+        "value": 0,
+        "max": 0,
+        "per": ""
+      },
+      "consume": {
+        "type": "",
+        "target": "",
+        "amount": null
+      },
+      "ability": "",
+      "actionType": "mwak",
+      "attackBonus": 0,
+      "chatFlavor": "",
+      "critical": null,
+      "damage": {
+        "parts": [
+          [
+            "1d6+@mod",
+            ""
+          ]
+        ],
+        "versatile": ""
+      },
+      "formula": "",
+      "save": {
+        "ability": "",
+        "dc": null,
+        "scaling": "spell"
+      },
+      "weaponType": "natural",
+      "properties": {
+        "amm": false,
+        "fin": false,
+        "fir": false,
+        "foc": false,
+        "hvy": false,
+        "lgt": false,
+        "lod": false,
+        "rch": false,
+        "rel": false,
+        "ret": false,
+        "spc": false,
+        "thr": false,
+        "two": false,
+        "ver": false
+      },
+      "proficient": true
+    },
+    "sort": 100000
+  }

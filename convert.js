@@ -20,26 +20,53 @@ function getWord(textArray, position) {
 }
 
 
+function setDataFromStaticPositionText(foundryJson, lines) {
+    let prevJson
+    for (attributeName in attributeToKey) {
+        let currentJson = foundryJson;
+        let keyPath = attributeToKey[attributeName].split('.');
+        keyPath.forEach(nextKey => {
+            prevJson = foundryJson;
+            console.log('going down', nextKey)
+            currentJson = currentJson[nextKey];
+        })
+        console.log(keyPath, attributeName)
+        prevJson[keyPath[keyPath.length-1]] = getWord(lines, attrToWordIndex[attributeName])
+    }
+    return prevJson;
+}
+
+
+function saveJson(json) {
+    let a = document.createElement("a");
+    let file = new Blob([JSON.stringify(json)]);
+    a.href = URL.createObjectURL(file);
+    a.download = 'foundryOut.json';
+    a.click();
+}
+
+
 function convert(text) {
     let lines = text.split('\r\n'); // Onenote uses carrage returns so we need to consider \r and \n
 
-    $.getJSON("foundryEmptyNPC.json", foundryNPC => {
+    $.getJSON("emptyNpcData.json", npcData => {
         // Easy ones
-        foundryNPC.name = lines[0];
-        foundryNPC.data.traits.size = getWord(lines, attrToWordIndex['size']);
-        foundryNPC.data.details.type = getWord(lines, attrToWordIndex['type']);
-        foundryNPC.data.attributes.ac.value = getWord(lines, attrToWordIndex['ac']);
-        foundryNPC.data.attributes.hp.value = getWord(lines, attrToWordIndex['hp']);
-        foundryNPC.data.attributes.hp.max = getWord(lines, attrToWordIndex['hp']);
-        foundryNPC.data.attributes.hp.formula = getWord(lines, attrToWordIndex['hpFormula']);
-        foundryNPC.data.attributes.speed = getWord(lines, attrToWordIndex['speed']);
-        foundryNPC.data.details.alignment = getWord(lines, attrToWordIndex['alignment']);
-        foundryNPC.data.abilities.str.value = getWord(lines, attrToWordIndex['str']);
-        foundryNPC.data.abilities.dex.value = getWord(lines, attrToWordIndex['dex']);
-        foundryNPC.data.abilities.con.value = getWord(lines, attrToWordIndex['con']);
-        foundryNPC.data.abilities.int.value = getWord(lines, attrToWordIndex['int']);
-        foundryNPC.data.abilities.wis.value = getWord(lines, attrToWordIndex['wis']);
-        foundryNPC.data.abilities.cha.value = getWord(lines, attrToWordIndex['cha']);
+        // foundryNPC.name = lines[0];
+        // foundryNPC = setDataFromStaticPositionText(foundryNPC, lines);
+        npcData.traits.size = getWord(lines, attrToWordIndex['size']);
+        npcData.details.type = getWord(lines, attrToWordIndex['type']);
+        npcData.attributes.ac.value = getWord(lines, attrToWordIndex['ac']);
+        npcData.attributes.hp.value = getWord(lines, attrToWordIndex['hpval']);
+        npcData.attributes.hp.max = getWord(lines, attrToWordIndex['hpmax']);
+        npcData.attributes.hp.formula = getWord(lines, attrToWordIndex['hpformula']);
+        npcData.attributes.speed = getWord(lines, attrToWordIndex['speed']);
+        npcData.details.alignment = getWord(lines, attrToWordIndex['alignment']);
+        npcData.abilities.str.value = getWord(lines, attrToWordIndex['str']);
+        npcData.abilities.dex.value = getWord(lines, attrToWordIndex['dex']);
+        npcData.abilities.con.value = getWord(lines, attrToWordIndex['con']);
+        npcData.abilities.int.value = getWord(lines, attrToWordIndex['int']);
+        npcData.abilities.wis.value = getWord(lines, attrToWordIndex['wis']);
+        npcData.abilities.cha.value = getWord(lines, attrToWordIndex['cha']);
 
         // Proficient Skills
         lines
@@ -49,7 +76,7 @@ function convert(text) {
             .filter(word => word[0] !== '+' && word[0] !== '-') // Get rid of bonus values
             .filter(word => word !== "")        // Get rid of empty words
             .map(skill => skillsMap[skill])     // Convert to foundry abbreviations
-            .forEach(skill => foundryNPC.data.skills[skill].value = 1); // Save proficiency to output NPC
+            .forEach(skill => npcData.skills[skill].value = 1); // Save proficiency to output NPC
 
         // Resistances
         lines
@@ -58,13 +85,13 @@ function convert(text) {
             .slice(2)
             .filter(word => word !== "") // Get rid of empty words
             .map(resistance => resistance.replace(/,$/, "")) // Remove comma from end of each damage type
-            .forEach(resistance => foundryNPC.data.traits.dr.value.push(resistance));
+            .forEach(resistance => npcData.traits.dr.value.push(resistance));
 
         // Senses
         let senses = lines
             .find(line => line.split(' ')[0] === "Senses")
             .replace(/^Senses /, "") // Remove the word senses from the string
-        foundryNPC.data.traits.senses = senses;
+        npcData.traits.senses = senses;
 
         // Languages
         const FOUNDRY_DEFAULT_LANGUAGES = ["Aarakocra", "Abyssal", "Aquan", "Auran", "Celestial", "Common", "Deep Speech", "Draconic", "Druidic", "Dwarvish", "Elvish", "Giant", "Gith", "Gnoll", "Gnomish", "Goblin", "Halfling", "Ignan", "Infernal", "Orc", "Primordial", "Sylvan", "Terran", "Thieves' Cant", "Undercommon"]
@@ -76,34 +103,40 @@ function convert(text) {
             .filter(word => word !== "")
             .forEach(language => {
                 if (FOUNDRY_DEFAULT_LANGUAGES.includes(language)) {
-                    foundryNPC.data.traits.languages.value.push(lanuage);
+                    npcData.traits.languages.value.push(lanuage);
                 } else {
-                    foundryNPC.data.traits.languages.custom += language + ';';
+                    npcData.traits.languages.custom += language + ';';
                 }
             });
         // Remove final semicolon that was added as a seperator
-        foundryNPC.data.traits.languages.custom = foundryNPC.data.traits.languages.custom.replace(/;$/, "") 
+        npcData.traits.languages.custom = npcData.traits.languages.custom.replace(/;$/, "") 
 
         // Challenge Rating
-        let challengeRating = lines
-            .find(line => line.split(' ')[0] === "Challenge") 
+        const CHALLENGE_LINE = lines.findIndex(line => line.split(' ')[0] === "Challenge");
+        let challengeRating = lines[CHALLENGE_LINE]
             .split(' ')[1]
-        console.log(challengeRating)
-        foundryNPC.data.details.cr = parseInt(challengeRating);
+        npcData.details.cr = parseInt(challengeRating);
 
         // XP
-        let xpValue = lines
-            .find(line => line.split(' ')[0] === "Challenge") 
+        let xpValue = lines[CHALLENGE_LINE]
             .split(' ')[2]
             .replace(/,/, '')   // Remove commas from number
             .replace(/\(/, '')  // Remove bracket from around number
-        foundryNPC.data.details.xp.value = parseInt(xpValue);
+        npcData.details.xp.value = parseInt(xpValue);
 
         // Abilities
+        // const ACTIONS_LINE = lines.findIndex(line => line === "ACTIONS ");
+        // const ABILITIES_LINES = lines.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
+
+        // $.getJSON("abilityItem.json")
+        //     .done(ability=>{
+
+        //     });
 
         // Actions
         
-        console.log(foundryNPC)
+        console.log(npcData)
+        saveJson(npcData);
     })
 
 
