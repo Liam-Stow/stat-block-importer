@@ -86,7 +86,7 @@ function readFeatures(featuresLines) {
                 features[featureName] = featureDescription;
             const NAME_END_INDEX = line.indexOf('.'); // Get the index of the first dot
             featureName = line.slice(0,NAME_END_INDEX); // chars before first dot
-            featureDescription = line.slice(NAME_END_INDEX); // chars after first dot
+            featureDescription = line.slice(NAME_END_INDEX+2); // chars after first dot and space
         } else {                
             featureDescription += line;
         }
@@ -179,30 +179,9 @@ function convert(text) {
     })
 
     // Abilities
+    const ABILITY_LINES = LINES.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
+    let abilities = readFeatures(ABILITY_LINES);
     $.getJSON("abilityItem.json", emptyAbility => {
-        // Parse abilities
-        
-        // let abilities = {};
-        // let abilityName = ""
-        // let abilityText = "";
-        // ABILITY_LINES.forEach(line => {
-        //     // If either of the first two words ends in a full stop, its probably the start of a new ability.
-        //     const WORDS = line.split(' ');
-        //     if (getLastItem(WORDS[0]) === '.' || getLastItem(WORDS[1]) === '.') {
-        //         if (abilityName !== "")
-        //             abilities[abilityName] = abilityText;
-        //         const NAME_END_INDEX = line.indexOf('.'); // Get the index of the first dot
-        //         abilityName = line.slice(0,NAME_END_INDEX); // chars before first dot
-        //         abilityText = line.slice(NAME_END_INDEX); // chars after first dot
-        //     } else {                
-        //         abilityText += line;
-        //     }
-        // });
-        // abilities[abilityName] = abilityText;
-        // console.log(abilities)
-        const ABILITY_LINES = LINES.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
-        let abilities = readFeatures(ABILITY_LINES);
-
         // Make Foundry Items
         let abilityItems = []
         for (let ability in abilities) {
@@ -211,20 +190,22 @@ function convert(text) {
             newItem.data.description.value = abilities[ability];
             abilityItems.push(newItem);
         }
-        saveJson(abilityItems)
+        // saveJson(abilityItems)
     })
+    for (let abilityName in abilities) {
+        console.log(abilities[abilityName])
+    }
 
     // Actions
+    const ACTION_LINES = LINES.slice(ACTIONS_LINE+1);
+    let actions = readFeatures(ACTION_LINES);
+    let actionDetails = {}
+    // Split actions into details
+    for (let actionName in actions) {
+        let detailsString = actions[actionName];
+        console.log(actions[actionName])
+    }
     $.getJSON("actionItem.json", emptyAction => {
-        // Parse abilities
-        const ACTION_LINES = LINES.slice(ACTIONS_LINE+1);
-        let actions = readFeatures(ACTION_LINES);
-
-        // Split actions into details
-        for (let actionName in actions) {
-            let details = actions[actionName];
-            console.log(details);
-        }
 
     })
 
