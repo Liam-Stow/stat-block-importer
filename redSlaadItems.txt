@@ -1,0 +1,554 @@
+[
+  {
+    "_id": "fa6mtEJ7pDBiOZ1A",
+    "flags": {
+      "_sheetTab": ""
+    },
+    "name": "Magic Resistance",
+    "type": "feat",
+    "img": "systems/dnd5e/icons/skills/blue_18.jpg",
+    "data": {
+      "description": {
+        "value": "<p>The &lt;creature&gt; has advantage on saving throws against spells and other magical effects.</p>",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": "",
+      "activation": {
+        "type": "",
+        "cost": 0,
+        "condition": ""
+      },
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "target": {
+        "value": null,
+        "units": "",
+        "type": ""
+      },
+      "range": {
+        "value": null,
+        "long": "",
+        "units": ""
+      },
+      "uses": {
+        "value": 0,
+        "max": 0,
+        "per": "",
+        "type": ""
+      },
+      "consume": {
+        "type": "",
+        "target": "",
+        "amount": ""
+      },
+      "ability": "",
+      "actionType": "",
+      "attackBonus": 0,
+      "chatFlavor": "",
+      "critical": "",
+      "damage": {
+        "parts": [
+          [
+            "",
+            ""
+          ]
+        ],
+        "versatile": "",
+        "value": ""
+      },
+      "formula": "",
+      "save": {
+        "ability": "",
+        "dc": null,
+        "scaling": "",
+        "value": ""
+      },
+      "requirements": "",
+      "recharge": {
+        "value": null,
+        "charged": false
+      },
+      "time": {
+        "value": "",
+        "_deprecated": null
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": null
+      },
+      "properties": {
+        "value": "",
+        "amm": null,
+        "fin": null,
+        "fir": null,
+        "foc": null,
+        "hvy": null,
+        "lgt": null,
+        "lod": null,
+        "rch": null,
+        "rel": null,
+        "ret": null,
+        "spc": null,
+        "thr": null,
+        "two": null,
+        "ver": null
+      },
+      "featType": {
+        "value": "",
+        "_deprecated": null
+      }
+    },
+    "sort": 11600001
+  },
+  {
+    "_id": "6spjRhrEpZJqcCcQ",
+    "flags": {
+      "_sheetTab": ""
+    },
+    "name": "Regeneration",
+    "type": "feat",
+    "img": "systems/dnd5e/icons/skills/red_33.jpg",
+    "data": {
+      "description": {
+        "value": "<p>The &lt;creature&gt; regains 10 hit points at the start of its turn if it has at least 1 hit point.&nbsp;</p>",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": "",
+      "activation": {
+        "type": "",
+        "cost": 0,
+        "condition": ""
+      },
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "target": {
+        "value": null,
+        "units": "",
+        "type": ""
+      },
+      "range": {
+        "value": null,
+        "long": "",
+        "units": ""
+      },
+      "uses": {
+        "value": 0,
+        "max": 0,
+        "per": "",
+        "type": ""
+      },
+      "consume": {
+        "type": "",
+        "target": "",
+        "amount": ""
+      },
+      "ability": "",
+      "actionType": "",
+      "attackBonus": 0,
+      "chatFlavor": "",
+      "critical": "",
+      "damage": {
+        "parts": [],
+        "versatile": "",
+        "value": ""
+      },
+      "formula": "",
+      "save": {
+        "ability": "",
+        "dc": null,
+        "scaling": "",
+        "value": ""
+      },
+      "requirements": "",
+      "recharge": {
+        "value": null,
+        "charged": false
+      },
+      "time": {
+        "value": "",
+        "_deprecated": null
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": null
+      },
+      "properties": {
+        "value": "",
+        "amm": null,
+        "fin": null,
+        "fir": null,
+        "foc": null,
+        "hvy": null,
+        "lgt": null,
+        "lod": null,
+        "rch": null,
+        "rel": null,
+        "ret": null,
+        "spc": null,
+        "thr": null,
+        "two": null,
+        "ver": null
+      },
+      "featType": {
+        "value": "",
+        "_deprecated": null
+      }
+    },
+    "sort": 14400001
+  },
+  {
+    "_id": "urncqoamXj1O0mfI",
+    "flags": {
+      "_sheetTab": ""
+    },
+    "name": "Multiattack",
+    "type": "feat",
+    "img": "https://wow.zamimg.com/images/wow/icons/large/ability_dualwield.jpg",
+    "data": {
+      "description": {
+        "value": "<p>The slaad makes three attacks: one with its bite</p>\n<p>and two with its claws.</p>",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": "",
+      "activation": {
+        "type": "",
+        "cost": 0,
+        "condition": ""
+      },
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "target": {
+        "value": null,
+        "units": "",
+        "type": ""
+      },
+      "range": {
+        "value": null,
+        "long": "",
+        "units": ""
+      },
+      "uses": {
+        "value": 0,
+        "max": 0,
+        "per": "",
+        "type": ""
+      },
+      "consume": {
+        "type": "",
+        "target": "",
+        "amount": ""
+      },
+      "ability": "",
+      "actionType": "",
+      "attackBonus": 0,
+      "chatFlavor": "",
+      "critical": "",
+      "damage": {
+        "parts": [],
+        "versatile": "",
+        "value": ""
+      },
+      "formula": "",
+      "save": {
+        "ability": "",
+        "dc": null,
+        "scaling": "",
+        "value": ""
+      },
+      "requirements": "",
+      "recharge": {
+        "value": null,
+        "charged": false
+      },
+      "time": {
+        "value": "",
+        "_deprecated": null
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": null
+      },
+      "properties": {
+        "value": "",
+        "amm": null,
+        "fin": null,
+        "fir": null,
+        "foc": null,
+        "hvy": null,
+        "lgt": null,
+        "lod": null,
+        "rch": null,
+        "rel": null,
+        "ret": null,
+        "spc": null,
+        "thr": null,
+        "two": null,
+        "ver": null
+      },
+      "featType": {
+        "value": "",
+        "_deprecated": null
+      }
+    },
+    "sort": 12200001
+  },
+  {
+    "_id": "2QATznkl10Cues6U",
+    "flags": {
+      "_sheetTab": "",
+      "mess": {
+        "templateTexture": ""
+      },
+      "magicitems": {
+        "charges": "0",
+        "chargeType": "c1",
+        "recharge": "0",
+        "rechargeType": "t1",
+        "rechargeUnit": "r1",
+        "enabled": false,
+        "destroy": false,
+        "rechargeable": false
+      }
+    },
+    "name": "Bite",
+    "type": "weapon",
+    "img": "https://wow.zamimg.com/images/wow/icons/large/ability_druid_ferociousbite.jpg",
+    "data": {
+      "description": {
+        "value": "<p>Generic bite attack placeholder.</p> ",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": "",
+      "quantity": 1,
+      "weight": 0,
+      "price": null,
+      "attuned": false,
+      "equipped": false,
+      "rarity": "Common",
+      "identified": true,
+      "activation": {
+        "type": "action",
+        "cost": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "target": {
+        "value": 1,
+        "units": "",
+        "type": "creature"
+      },
+      "range": {
+        "value": 5,
+        "long": null,
+        "units": "ft"
+      },
+      "uses": {
+        "value": 0,
+        "max": 0,
+        "per": "",
+        "type": ""
+      },
+      "consume": {
+        "type": "",
+        "target": "",
+        "amount": null
+      },
+      "ability": "str",
+      "actionType": "mwak",
+      "attackBonus": 0,
+      "chatFlavor": "",
+      "critical": "",
+      "damage": {
+        "parts": [
+          [
+            "2d4 + @mod",
+            "piercing"
+          ]
+        ],
+        "versatile": "",
+        "value": ""
+      },
+      "formula": "",
+      "save": {
+        "ability": "",
+        "dc": null,
+        "scaling": "spell",
+        "value": ""
+      },
+      "weaponType": "natural",
+      "properties": {
+        "value": "",
+        "amm": false,
+        "fin": false,
+        "fir": false,
+        "foc": false,
+        "hvy": false,
+        "lgt": false,
+        "lod": false,
+        "rch": false,
+        "rel": false,
+        "ret": false,
+        "spc": false,
+        "thr": false,
+        "two": false,
+        "ver": false
+      },
+      "proficient": true,
+      "recharge": {
+        "value": null,
+        "charged": null
+      },
+      "time": {
+        "value": "",
+        "_deprecated": null
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": null
+      },
+      "featType": {
+        "value": "",
+        "_deprecated": null
+      }
+    },
+    "sort": 2000001
+  },
+  {
+    "_id": "ovmNdVzclGXcAc6M",
+    "flags": {
+      "_sheetTab": "",
+      "mess": {
+        "templateTexture": ""
+      },
+      "magicitems": {
+        "charges": "0",
+        "chargeType": "c1",
+        "recharge": "0",
+        "rechargeType": "t1",
+        "rechargeUnit": "r1",
+        "enabled": false,
+        "destroy": false,
+        "rechargeable": false
+      }
+    },
+    "name": "Claw",
+    "type": "weapon",
+    "img": "https://wow.zamimg.com/images/wow/icons/large/inv_misc_rylakclaw.jpg",
+    "data": {
+      "description": {
+        "value": "<p>If the target is a humanoid,</p>\n<p>it must succeed on a DC 14 Constitution saving throw or be</p>\n<section class=\"secret\">\n<p>infected with a disease—a minuscule slaad egg.</p>\n<p>A humanoid host can carry only one slaad egg to term at a</p>\n<p>time. Over three months, the egg moves to the chest cavity,</p>\n<p>gestates, and forms a slaad tadpole. In the 24-hour period</p>\n<p>before giving birth, the host starts to feel unwell, its speed is</p>\n<p>halved, and it has disadvantage on attack rolls, ability checks,</p>\n<p>and saving throws. At birth, the tadpole chews its way through</p>\n<p>vital organs and out of the host's chest in 1 round, killing the</p>\n<p>host in the process.</p>\n<p>If the disease is cured before the tadpole's emergence, the</p>\n<p>unborn slaad is disintegrated.</p>\n</section>",
+        "chat": "",
+        "unidentified": ""
+      },
+      "source": "",
+      "quantity": 1,
+      "weight": 0,
+      "price": null,
+      "attuned": false,
+      "equipped": false,
+      "rarity": "",
+      "identified": true,
+      "activation": {
+        "type": "action",
+        "cost": 1,
+        "condition": ""
+      },
+      "duration": {
+        "value": null,
+        "units": ""
+      },
+      "target": {
+        "value": 1,
+        "units": "",
+        "type": "creature"
+      },
+      "range": {
+        "value": 5,
+        "long": null,
+        "units": "ft"
+      },
+      "uses": {
+        "value": 0,
+        "max": 0,
+        "per": "",
+        "type": ""
+      },
+      "consume": {
+        "type": "",
+        "target": "",
+        "amount": null
+      },
+      "ability": "str",
+      "actionType": "mwak",
+      "attackBonus": 0,
+      "chatFlavor": "",
+      "critical": "",
+      "damage": {
+        "parts": [
+          [
+            "1d8 + @mod",
+            "slashing"
+          ]
+        ],
+        "versatile": "",
+        "value": ""
+      },
+      "formula": "",
+      "save": {
+        "ability": "",
+        "dc": null,
+        "scaling": "spell",
+        "value": ""
+      },
+      "weaponType": "natural",
+      "properties": {
+        "value": "",
+        "amm": false,
+        "fin": false,
+        "fir": false,
+        "foc": false,
+        "hvy": false,
+        "lgt": false,
+        "lod": false,
+        "rch": false,
+        "rel": false,
+        "ret": false,
+        "spc": false,
+        "thr": false,
+        "two": false,
+        "ver": false
+      },
+      "proficient": true,
+      "recharge": {
+        "value": null,
+        "charged": null
+      },
+      "time": {
+        "value": "",
+        "_deprecated": null
+      },
+      "damageType": {
+        "value": "",
+        "_deprecated": null
+      },
+      "featType": {
+        "value": "",
+        "_deprecated": null
+      }
+    },
+    "sort": 3300001
+  }
+]

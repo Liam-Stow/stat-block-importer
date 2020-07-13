@@ -46,30 +46,40 @@ function saveJson(json) {
 }
 
 
+function findLineByStartWord(lines, startWord) {
+    return lines.findIndex(line => line.split(' ')[0] === startWord);
+}
+
+
+function getLastItem(indexable) {
+    return indexable[indexable.length-1];
+}
+
+
 function convert(text) {
-    let lines = text.split('\r\n'); // Onenote uses carrage returns so we need to consider \r and \n
+    const LINES = text.split('\r\n'); // Onenote uses carrage returns so we need to consider \r and \n
+    const CHALLENGE_LINE = findLineByStartWord(LINES, "Challenge");
+    const ACTIONS_LINE = findLineByStartWord(LINES, "ACTIONS");
 
     $.getJSON("emptyNpcData.json", npcData => {
         // Easy ones
-        // foundryNPC.name = lines[0];
-        // foundryNPC = setDataFromStaticPositionText(foundryNPC, lines);
-        npcData.traits.size = getWord(lines, attrToWordIndex['size']);
-        npcData.details.type = getWord(lines, attrToWordIndex['type']);
-        npcData.attributes.ac.value = getWord(lines, attrToWordIndex['ac']);
-        npcData.attributes.hp.value = getWord(lines, attrToWordIndex['hpval']);
-        npcData.attributes.hp.max = getWord(lines, attrToWordIndex['hpmax']);
-        npcData.attributes.hp.formula = getWord(lines, attrToWordIndex['hpformula']);
-        npcData.attributes.speed = getWord(lines, attrToWordIndex['speed']);
-        npcData.details.alignment = getWord(lines, attrToWordIndex['alignment']);
-        npcData.abilities.str.value = getWord(lines, attrToWordIndex['str']);
-        npcData.abilities.dex.value = getWord(lines, attrToWordIndex['dex']);
-        npcData.abilities.con.value = getWord(lines, attrToWordIndex['con']);
-        npcData.abilities.int.value = getWord(lines, attrToWordIndex['int']);
-        npcData.abilities.wis.value = getWord(lines, attrToWordIndex['wis']);
-        npcData.abilities.cha.value = getWord(lines, attrToWordIndex['cha']);
+        npcData.traits.size = getWord(LINES, attrToWordIndex['size']);
+        npcData.details.type = getWord(LINES, attrToWordIndex['type']);
+        npcData.attributes.ac.value = getWord(LINES, attrToWordIndex['ac']);
+        npcData.attributes.hp.value = getWord(LINES, attrToWordIndex['hpval']);
+        npcData.attributes.hp.max = getWord(LINES, attrToWordIndex['hpmax']);
+        npcData.attributes.hp.formula = getWord(LINES, attrToWordIndex['hpformula']);
+        npcData.attributes.speed = getWord(LINES, attrToWordIndex['speed']);
+        npcData.details.alignment = getWord(LINES, attrToWordIndex['alignment']);
+        npcData.abilities.str.value = getWord(LINES, attrToWordIndex['str']);
+        npcData.abilities.dex.value = getWord(LINES, attrToWordIndex['dex']);
+        npcData.abilities.con.value = getWord(LINES, attrToWordIndex['con']);
+        npcData.abilities.int.value = getWord(LINES, attrToWordIndex['int']);
+        npcData.abilities.wis.value = getWord(LINES, attrToWordIndex['wis']);
+        npcData.abilities.cha.value = getWord(LINES, attrToWordIndex['cha']);
 
         // Proficient Skills
-        lines
+        LINES
             .find(line => line.split(' ')[0] === "Skills") // Find the skills line
             .split(' ')                         // Turn line into array of words
             .slice(1)                           // Get rid of the word "Skills" from the start of the line
@@ -79,7 +89,7 @@ function convert(text) {
             .forEach(skill => npcData.skills[skill].value = 1); // Save proficiency to output NPC
 
         // Resistances
-        lines
+        LINES
             .find(line => line.split(' ').slice(0,2).join(' ') === "Damage Resistances")
             .split(' ')
             .slice(2)
@@ -88,14 +98,14 @@ function convert(text) {
             .forEach(resistance => npcData.traits.dr.value.push(resistance));
 
         // Senses
-        let senses = lines
+        let senses = LINES
             .find(line => line.split(' ')[0] === "Senses")
             .replace(/^Senses /, "") // Remove the word senses from the string
         npcData.traits.senses = senses;
 
         // Languages
         const FOUNDRY_DEFAULT_LANGUAGES = ["Aarakocra", "Abyssal", "Aquan", "Auran", "Celestial", "Common", "Deep Speech", "Draconic", "Druidic", "Dwarvish", "Elvish", "Giant", "Gith", "Gnoll", "Gnomish", "Goblin", "Halfling", "Ignan", "Infernal", "Orc", "Primordial", "Sylvan", "Terran", "Thieves' Cant", "Undercommon"]
-        lines
+        LINES
             .find(line => line.split(' ')[0] === "Languages") 
             .replace(/^Languages /, "") // Remove the word Languages from the string
             .replace(/ $/, "") // Remove space at end of line
@@ -112,33 +122,54 @@ function convert(text) {
         npcData.traits.languages.custom = npcData.traits.languages.custom.replace(/;$/, "") 
 
         // Challenge Rating
-        const CHALLENGE_LINE = lines.findIndex(line => line.split(' ')[0] === "Challenge");
-        let challengeRating = lines[CHALLENGE_LINE]
+        const challengeRating = LINES[CHALLENGE_LINE]
             .split(' ')[1]
         npcData.details.cr = parseInt(challengeRating);
 
         // XP
-        let xpValue = lines[CHALLENGE_LINE]
+        const xpValue = LINES[CHALLENGE_LINE]
             .split(' ')[2]
             .replace(/,/, '')   // Remove commas from number
             .replace(/\(/, '')  // Remove bracket from around number
         npcData.details.xp.value = parseInt(xpValue);
 
-        // Abilities
-        // const ACTIONS_LINE = lines.findIndex(line => line === "ACTIONS ");
-        // const ABILITIES_LINES = lines.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
-
-        // $.getJSON("abilityItem.json")
-        //     .done(ability=>{
-
-        //     });
-
-        // Actions
-        
         console.log(npcData)
         saveJson(npcData);
     })
 
+    // Abilities
+    $.getJSON("abilityItem.json", emptyAbility => {
+        // Parse abilities
+        const ABILITY_LINES = LINES.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
+        let abilities = {};
+        let abilityName = ""
+        let abilityText = "";
+        ABILITY_LINES.forEach(line => {
+            // If either of the first two words ends in a full stop, its probably the start of a new ability.
+            const WORDS = line.split(' ');
+            if (getLastItem(WORDS[0]) === '.' || getLastItem(WORDS[1]) === '.') {
+                if (abilityName !== "")
+                    abilities[abilityName] = abilityText;
+                const NAME_END_INDEX = line.indexOf('.'); // Get the index of the first dot
+                abilityName = line.slice(0,NAME_END_INDEX); // chars before first dot
+                abilityText = line.slice(NAME_END_INDEX); // chars after first dot
+            } else {                
+                abilityText += line;
+            }
+        });
+        abilities[abilityName] = abilityText;
+        console.log(abilities)
+
+        // Make Foundry Items
+        let abilityItems = []
+        for (let ability in abilities) {
+            let newItem = JSON.parse(JSON.stringify(emptyAbility)); // stringify then parse to make a copy rather than reference original
+            newItem.name = ability;
+            newItem.data.description.value = abilities[ability];
+            abilityItems.push(newItem);
+        }
+        saveJson(abilityItems)
+    })
 
     let json = text;
     return json;
