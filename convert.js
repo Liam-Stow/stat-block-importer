@@ -11,6 +11,11 @@ $(document).ready(function () {
 })
 
 
+// Remove a number of characters equal to endTrim from the end of str
+function trimEnds(str, startTrim, endTrim) {
+    return str.slice(startTrim, str.length-endTrim);
+}
+
 // Returns the first N words from a string as a new string
 // remove the last endTrim letters
 function getFirstWords(str, numberOfWords, endTrim=0) {
@@ -18,7 +23,7 @@ function getFirstWords(str, numberOfWords, endTrim=0) {
         .split(' ')
         .slice(0, numberOfWords)
         .join(' ');
-    return firstWords.slice(0, firstWords.length-endTrim);
+    return trimEnds(firstWords, 0, endTrim);
 }
 
 
@@ -27,7 +32,7 @@ function getWord(textArray, position) {
     let wordIndicies = position[1];
     let line = textArray[lineIndicies].split(' ');
     let words = line.filter((_, index) => wordIndicies.includes(index));
-    return words.reduce((sum, next) => sum + ' ' + next);
+    return words.reduce((sum, next) => sum + ' ' + next, "");
 }
 
 
@@ -38,10 +43,8 @@ function setDataFromStaticPositionText(foundryJson, lines) {
         let keyPath = attributeToKey[attributeName].split('.');
         keyPath.forEach(nextKey => {
             prevJson = foundryJson;
-            console.log('going down', nextKey)
             currentJson = currentJson[nextKey];
         })
-        console.log(keyPath, attributeName)
         prevJson[keyPath[keyPath.length-1]] = getWord(lines, attrToWordIndex[attributeName])
     }
     return prevJson;
@@ -75,10 +78,13 @@ function isUpperCase(char) {
     return true; // passed both checks, its upper case
 }
 
+// Check if an action is an attack from its details string
+function isAttack(detailsString) {
+    return isAttackType(getFirstWords(detailsString, 3, 1));
+}
 
 // returns true if str is a type of attack
 function isAttackType(str) {
-    console.log("checking if", str, "is an attack type")
     const ATTACK_TYPES = ["Melee Weapon Attack", "Ranged Weapon Attack", "Melee Spell Attack", "Ranged Spell Attack"];
     return ATTACK_TYPES.includes(str);
 }
@@ -117,7 +123,10 @@ function readFeatures(featuresLines) {
 
 
 function convert(text) {
-    const LINES = text.split('\r\n'); // Onenote uses carrage returns so we need to consider \r and \n
+    const LINES = text
+        .split('\r\n') // Onenote uses carrage returns so we need to consider \r and \n
+        .filter(line => line !== "" && line !== " "); 
+    
     const CHALLENGE_LINE = findLineByStartWord(LINES, "Challenge");
     const ACTIONS_LINE = findLineByStartWord(LINES, "ACTIONS");
 
@@ -149,13 +158,15 @@ function convert(text) {
             .forEach(skill => npcData.skills[skill].value = 1); // Save proficiency to output NPC
 
         // Resistances
-        LINES
-            .find(line => line.split(' ').slice(0,2).join(' ') === "Damage Resistances")
-            .split(' ')
-            .slice(2)
-            .filter(word => word !== "") // Get rid of empty words
-            .map(resistance => resistance.replace(/,$/, "")) // Remove comma from end of each damage type
-            .forEach(resistance => npcData.traits.dr.value.push(resistance));
+        let resistancesLine = LINES.find(line => line.match(/^Damage Resistances/) !== null);
+        if (resistancesLine !== undefined) {
+            resistancesLine
+                .split(' ')
+                .slice(2)
+                .filter(word => word !== "") // Get rid of empty words
+                .map(resistance => resistance.replace(/,$/, "")) // Remove comma from end of each damage type
+                .forEach(resistance => npcData.traits.dr.value.push(resistance));
+        }
 
         // Senses
         let senses = LINES
@@ -173,7 +184,7 @@ function convert(text) {
             .filter(word => word !== "")
             .forEach(language => {
                 if (FOUNDRY_DEFAULT_LANGUAGES.includes(language)) {
-                    npcData.traits.languages.value.push(lanuage);
+                    npcData.traits.languages.value.push(language);
                 } else {
                     npcData.traits.languages.custom += language + ';';
                 }
@@ -193,7 +204,7 @@ function convert(text) {
             .replace(/\(/, '')  // Remove bracket from around number
         npcData.details.xp.value = parseInt(xpValue);
 
-        saveJson(npcData);
+        // saveJson(npcData);
     })
 
     // Abilities
@@ -214,23 +225,48 @@ function convert(text) {
     // Actions
     const ACTION_LINES = LINES.slice(ACTIONS_LINE+1);
     let actions = readFeatures(ACTION_LINES);
-    let actionDetails = {}
+    let detailedActions = {}
+
     // Split actions into details
     for (let actionName in actions) {
+        let actionDetails = {}
         let detailsString = actions[actionName];
-        if (isAttackType(getFirstWords(detailsString, 3, 1))){
-            actionDetails.type = detailsString.slice(0, detailsString.indexOf(':'))
-            actionDetails.atkBonus = detailsString.match(/(\+|\-)\d+ to hit/)[0].match(/\d+/)[0];
+        
+        if (isAttack(detailsString)) {
+            // add all attack details
+            let endOfTypeIndex = detailsString.indexOf(':');
+            let detailsArray = detailsString.slice(endOfTypeIndex+2).split(/(?:, )|(?:\. )/);
+            actionDetails.type = detailsString.slice(0, endOfTypeIndex);
+            actionDetails.atkBonus = detailsArray[0].match(/\d+/)[0];
+            actionDetails.targetNumber = detailsArray[2].split(' ')[0];
+            actionDetails.targetType = detailsArray[2].split(' ')[1];
+            actionDetails.damageDice = detailsArray[3].match(/\(.+\)/)[0];
+            actionDetails.damageType = trimEnds(detailsArray[3].match(/\)\s.+\s/)[0], 2, 1);
+
+            switch (actionDetails.type.split(' ')[0]) {
+                case "Melee":
+                    actionDetails.reach = detailsArray[1].match(/\d+/)[0]; // Reach is only ever going to be 5 or 10 feet. Units are always feet.
+                    break;
+                case "Ranged":
+                    let ranges = detailsArray[1].split(/[\/\s]/);
+                    actionDetails.normalRange = ranges[1];
+                    actionDetails.maxRange = ranges[2];
+                    actionDetails.rangeUnits = ranges[3];
+                    break;
+                default:
+                    break;
+            }
+
         } else {
+            // just add description
             actionDetails.description = detailsString;
         }
+        detailedActions[actionName] = actionDetails
     }
-    for (let detail in actionDetails) {
-        console.log(actionDetails[detail])
-    }
-    $.getJSON("actionItem.json", emptyAction => {
 
-    })
+    console.log("--------resulting actions--------")
+    console.log(detailedActions)
+
 
     let json = text;
     return json;
