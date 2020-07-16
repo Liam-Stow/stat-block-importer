@@ -74,3 +74,18 @@ const attributeToKey = {
     'cha' : 'abilities.cha.value',
 }
 
+const attackTypes = {
+    "Melee Weapon Attack" : "mwak",
+    "Ranged Weapon Attack" : "rwak",
+    "Melee Spell Attack" : "msak",
+    "Ranged Spell Attack" : "rsak",
+}
+
+const sizes = {
+    "Gargantuan" : "grg",
+    "Huge" : "huge",
+    "Large" : "grg",
+    "Medium" : "med",
+    "Small" : "sm",
+    "Tiny" : "tiny",
+}

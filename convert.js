@@ -27,12 +27,14 @@ function getFirstWords(str, numberOfWords, endTrim=0) {
 }
 
 
-function getWord(textArray, position) {
+// given an array of text lines and a [lineNumber, [word1, word2]] position array,
+// make a string of the selected words. 
+function getWords(textArray, position) {
     let lineIndicies = position[0];
     let wordIndicies = position[1];
     let line = textArray[lineIndicies].split(' ');
     let words = line.filter((_, index) => wordIndicies.includes(index));
-    return words.reduce((sum, next) => sum + ' ' + next, "");
+    return words.join(' ');
 }
 
 
@@ -45,17 +47,17 @@ function setDataFromStaticPositionText(foundryJson, lines) {
             prevJson = foundryJson;
             currentJson = currentJson[nextKey];
         })
-        prevJson[keyPath[keyPath.length-1]] = getWord(lines, attrToWordIndex[attributeName])
+        prevJson[keyPath[keyPath.length-1]] = getWords(lines, attrToWordIndex[attributeName])
     }
     return prevJson;
 }
 
 
-function saveJson(json) {
+function saveJson(json, fileName) {
     let a = document.createElement("a");
     let file = new Blob([JSON.stringify(json)]);
     a.href = URL.createObjectURL(file);
-    a.download = 'foundryOut.json';
+    a.download = fileName;
     a.click();
 }
 
@@ -132,20 +134,20 @@ function convert(text) {
 
     $.getJSON("emptyNpcData.json", npcData => {
         // Easy ones
-        npcData.traits.size = getWord(LINES, attrToWordIndex['size']);
-        npcData.details.type = getWord(LINES, attrToWordIndex['type']);
-        npcData.attributes.ac.value = getWord(LINES, attrToWordIndex['ac']);
-        npcData.attributes.hp.value = getWord(LINES, attrToWordIndex['hpval']);
-        npcData.attributes.hp.max = getWord(LINES, attrToWordIndex['hpmax']);
-        npcData.attributes.hp.formula = getWord(LINES, attrToWordIndex['hpformula']);
-        npcData.attributes.speed = getWord(LINES, attrToWordIndex['speed']);
-        npcData.details.alignment = getWord(LINES, attrToWordIndex['alignment']);
-        npcData.abilities.str.value = getWord(LINES, attrToWordIndex['str']);
-        npcData.abilities.dex.value = getWord(LINES, attrToWordIndex['dex']);
-        npcData.abilities.con.value = getWord(LINES, attrToWordIndex['con']);
-        npcData.abilities.int.value = getWord(LINES, attrToWordIndex['int']);
-        npcData.abilities.wis.value = getWord(LINES, attrToWordIndex['wis']);
-        npcData.abilities.cha.value = getWord(LINES, attrToWordIndex['cha']);
+        npcData.traits.size = getWords(LINES, attrToWordIndex['size']);
+        npcData.details.type = getWords(LINES, attrToWordIndex['type']);
+        npcData.attributes.ac.value = getWords(LINES, attrToWordIndex['ac']);
+        npcData.attributes.hp.value = getWords(LINES, attrToWordIndex['hpval']);
+        npcData.attributes.hp.max = getWords(LINES, attrToWordIndex['hpmax']);
+        npcData.attributes.hp.formula = getWords(LINES, attrToWordIndex['hpformula']);
+        npcData.attributes.speed = getWords(LINES, attrToWordIndex['speed']);
+        npcData.details.alignment = getWords(LINES, attrToWordIndex['alignment']);
+        npcData.abilities.str.value = getWords(LINES, attrToWordIndex['str']);
+        npcData.abilities.dex.value = getWords(LINES, attrToWordIndex['dex']);
+        npcData.abilities.con.value = getWords(LINES, attrToWordIndex['con']);
+        npcData.abilities.int.value = getWords(LINES, attrToWordIndex['int']);
+        npcData.abilities.wis.value = getWords(LINES, attrToWordIndex['wis']);
+        npcData.abilities.cha.value = getWords(LINES, attrToWordIndex['cha']);
 
         // Proficient Skills
         LINES
@@ -204,14 +206,14 @@ function convert(text) {
             .replace(/\(/, '')  // Remove bracket from around number
         npcData.details.xp.value = parseInt(xpValue);
 
-        // saveJson(npcData);
+        saveJson(npcData, 'actor.json');
     })
 
     // Abilities
     const ABILITY_LINES = LINES.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
     let abilities = readFeatures(ABILITY_LINES);
+    // Make Foundry Items
     $.getJSON("abilityItem.json", emptyAbility => {
-        // Make Foundry Items
         let abilityItems = []
         for (let ability in abilities) {
             let newItem = JSON.parse(JSON.stringify(emptyAbility)); // stringify then parse to make a copy rather than reference original
@@ -219,7 +221,7 @@ function convert(text) {
             newItem.data.description.value = abilities[ability];
             abilityItems.push(newItem);
         }
-        // saveJson(abilityItems)
+        saveJson(abilityItems, 'abilities.json')
     })
 
     // Actions
@@ -264,8 +266,37 @@ function convert(text) {
         detailedActions[actionName] = actionDetails
     }
 
-    console.log("--------resulting actions--------")
-    console.log(detailedActions)
+    // Make Foundry Items
+    let foundryActionItems = [];
+    for (action in detailedActions) {
+        console.log(action)
+        console.log(detailedActions[action])
+        $.getJSON("actionItem.json", foundryAction => {
+            console.log('setting name to', action)
+            foundryAction.name = action;
+            foundryAction.data.damage.parts[0] = detailedActions[action].damageDice;
+            foundryAction.data.damage.parts[1] = detailedActions[action].damageType;
+            foundryAction.data.actionType = attackTypes[detailedActions[action].type];
+
+            switch (detailedActions[action].type.split(' ')[0]) {
+                case "Melee":
+                    foundryAction.data.range.value = detailedActions[action].reach;
+                    break;
+                    
+                case "Ranged":
+                    foundryAction.data.range.value = detailedActions[action].normalRange;
+                    foundryAction.data.range.long = detailedActions[action].maxRange;
+                    foundryAction.data.range.units = detailedActions[action].rangeUnits;
+                    break;
+            
+                default:
+                    break;
+            }
+            console.log("adding", foundryAction, "to foundryActionItems")
+            foundryActionItems.push(foundryAction);
+        });
+    }
+    saveJson(foundryActionItems, 'actions.json')
 
 
     let json = text;
