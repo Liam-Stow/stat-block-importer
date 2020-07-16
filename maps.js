@@ -84,7 +84,7 @@ const attackTypes = {
 const sizes = {
     "Gargantuan" : "grg",
     "Huge" : "huge",
-    "Large" : "grg",
+    "Large" : "lg",
     "Medium" : "med",
     "Small" : "sm",
     "Tiny" : "tiny",

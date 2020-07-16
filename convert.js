@@ -134,20 +134,20 @@ function convert(text) {
 
     $.getJSON("emptyNpcData.json", npcData => {
         // Easy ones
-        npcData.traits.size = getWords(LINES, attrToWordIndex['size']);
+        npcData.traits.size = sizes[getWords(LINES, attrToWordIndex['size'])];
         npcData.details.type = getWords(LINES, attrToWordIndex['type']);
-        npcData.attributes.ac.value = getWords(LINES, attrToWordIndex['ac']);
-        npcData.attributes.hp.value = getWords(LINES, attrToWordIndex['hpval']);
-        npcData.attributes.hp.max = getWords(LINES, attrToWordIndex['hpmax']);
+        npcData.attributes.ac.value = parseInt(getWords(LINES, attrToWordIndex['ac']));
+        npcData.attributes.hp.value = parseInt(getWords(LINES, attrToWordIndex['hpval']));
+        npcData.attributes.hp.max = parseInt(getWords(LINES, attrToWordIndex['hpmax']));
         npcData.attributes.hp.formula = getWords(LINES, attrToWordIndex['hpformula']);
-        npcData.attributes.speed = getWords(LINES, attrToWordIndex['speed']);
+        npcData.attributes.speed.value = getWords(LINES, attrToWordIndex['speed']) + "ft";
         npcData.details.alignment = getWords(LINES, attrToWordIndex['alignment']);
-        npcData.abilities.str.value = getWords(LINES, attrToWordIndex['str']);
-        npcData.abilities.dex.value = getWords(LINES, attrToWordIndex['dex']);
-        npcData.abilities.con.value = getWords(LINES, attrToWordIndex['con']);
-        npcData.abilities.int.value = getWords(LINES, attrToWordIndex['int']);
-        npcData.abilities.wis.value = getWords(LINES, attrToWordIndex['wis']);
-        npcData.abilities.cha.value = getWords(LINES, attrToWordIndex['cha']);
+        npcData.abilities.str.value = parseInt(getWords(LINES, attrToWordIndex['str']));
+        npcData.abilities.dex.value = parseInt(getWords(LINES, attrToWordIndex['dex']));
+        npcData.abilities.con.value = parseInt(getWords(LINES, attrToWordIndex['con']));
+        npcData.abilities.int.value = parseInt(getWords(LINES, attrToWordIndex['int']));
+        npcData.abilities.wis.value = parseInt(getWords(LINES, attrToWordIndex['wis']));
+        npcData.abilities.cha.value = parseInt(getWords(LINES, attrToWordIndex['cha']));
 
         // Proficient Skills
         LINES
@@ -262,41 +262,43 @@ function convert(text) {
         } else {
             // just add description
             actionDetails.description = detailsString;
+            actionDetails.type = "Ability";
         }
         detailedActions[actionName] = actionDetails
     }
 
     // Make Foundry Items
     let foundryActionItems = [];
-    for (action in detailedActions) {
-        console.log(action)
-        console.log(detailedActions[action])
-        $.getJSON("actionItem.json", foundryAction => {
-            console.log('setting name to', action)
+    $.getJSON("actionItem.json", emptyFoundryAction => {
+        for (action in detailedActions) {
+            let foundryAction = JSON.parse(JSON.stringify(emptyFoundryAction)); // stringify then parse to make a copy rather than reference original
             foundryAction.name = action;
-            foundryAction.data.damage.parts[0] = detailedActions[action].damageDice;
-            foundryAction.data.damage.parts[1] = detailedActions[action].damageType;
-            foundryAction.data.actionType = attackTypes[detailedActions[action].type];
-
-            switch (detailedActions[action].type.split(' ')[0]) {
-                case "Melee":
-                    foundryAction.data.range.value = detailedActions[action].reach;
-                    break;
-                    
-                case "Ranged":
-                    foundryAction.data.range.value = detailedActions[action].normalRange;
-                    foundryAction.data.range.long = detailedActions[action].maxRange;
-                    foundryAction.data.range.units = detailedActions[action].rangeUnits;
-                    break;
+            foundryAction.data.description.value = actions[action]
             
-                default:
-                    break;
+            if (detailedActions[action].type !== "Ability") {
+                let dmgDice = detailedActions[action].damageDice;
+                let dmgType = detailedActions[action].damageType;
+                foundryAction.data.damage.parts.push([dmgDice, dmgType]);
+                foundryAction.data.actionType = attackTypes[detailedActions[action].type];
+                switch (detailedActions[action].type.split(' ')[0]) {
+                    case "Melee":
+                        foundryAction.data.range.value = detailedActions[action].reach;
+                        break;
+                        
+                    case "Ranged":
+                        foundryAction.data.range.value = detailedActions[action].normalRange;
+                        foundryAction.data.range.long = detailedActions[action].maxRange;
+                        foundryAction.data.range.units = detailedActions[action].rangeUnits;
+                        break;
+    
+                    default:
+                        break;
+                }
             }
-            console.log("adding", foundryAction, "to foundryActionItems")
             foundryActionItems.push(foundryAction);
-        });
-    }
-    saveJson(foundryActionItems, 'actions.json')
+        }
+        saveJson(foundryActionItems, 'actions.json')
+    });
 
 
     let json = text;

@@ -1,289 +1,293 @@
 {
-  "name": "Red Slaad",
+  "_id": "ybFSOqwopIIGaDWi",
+  "name": "Ape",
   "type": "npc",
   "data": {
     "abilities": {
       "str": {
         "value": 16,
         "proficient": 0,
+        "min": 3,
         "mod": 3,
+        "save": 3,
         "prof": 0,
         "saveBonus": 0,
-        "checkBonus": 0,
-        "save": 3
+        "checkBonus": 0
       },
       "dex": {
-        "value": 12,
+        "value": 14,
         "proficient": 0,
-        "mod": 1,
+        "min": 3,
+        "mod": 2,
+        "save": 2,
         "prof": 0,
         "saveBonus": 0,
-        "checkBonus": 0,
-        "save": 1
+        "checkBonus": 0
       },
       "con": {
-        "value": 16,
+        "value": 14,
         "proficient": 0,
-        "mod": 3,
+        "min": 3,
+        "mod": 2,
+        "save": 2,
         "prof": 0,
         "saveBonus": 0,
-        "checkBonus": 0,
-        "save": 3
+        "checkBonus": 0
       },
       "int": {
         "value": 6,
         "proficient": 0,
+        "min": 3,
         "mod": -2,
+        "save": -2,
         "prof": 0,
         "saveBonus": 0,
-        "checkBonus": 0,
-        "save": -2
+        "checkBonus": 0
       },
       "wis": {
-        "value": 6,
+        "value": 12,
         "proficient": 0,
-        "mod": -2,
+        "min": 3,
+        "mod": 1,
+        "save": 1,
         "prof": 0,
         "saveBonus": 0,
-        "checkBonus": 0,
-        "save": -2
+        "checkBonus": 0
       },
       "cha": {
         "value": 7,
         "proficient": 0,
+        "min": 3,
         "mod": -2,
+        "save": -2,
         "prof": 0,
         "saveBonus": 0,
-        "checkBonus": 0,
-        "save": -2
+        "checkBonus": 0
       }
     },
     "attributes": {
       "ac": {
-        "value": 14
+        "value": 12,
+        "min": 12
       },
       "hp": {
-        "value": 93,
+        "value": 19,
         "min": 0,
-        "max": 93,
+        "max": 19,
         "temp": 0,
         "tempmax": 0,
-        "formula": "(11d10 + 33)"
+        "formula": "3d8 + 6"
       },
       "init": {
         "value": 0,
         "bonus": 0,
-        "mod": 1,
-        "prof": 0,
-        "total": 1
+        "mod": 2,
+        "total": 2,
+        "prof": 0
       },
       "speed": {
-        "value": "30ft",
-        "special": ""
+        "value": "30 ft.",
+        "special": "Climb 30 ft."
       },
-      "spellcasting": "int",
-      "prof": 3,
-      "spelldc": 9
+      "spellcasting": "",
+      "prof": 2,
+      "spelldc": 10,
+      "spellLevel": 0
     },
     "details": {
-      "alignment": "",
+      "alignment": "Unaligned",
       "biography": {
-        "value": "",
+        "value": "<p><em>Token artwork by Forgotten Adventures.</em></p>",
         "public": ""
       },
-      "race": "",
-      "type": "aberration,",
-      "environment": "",
-      "cr": 5,
-      "spellLevel": 5,
+      "race": null,
+      "type": "Beast",
+      "environment": "Forest",
+      "cr": 0.5,
+      "spellLevel": 0,
       "xp": {
-        "value": 1800
+        "value": 100
       },
-      "source": ""
+      "source": "MM pg. 317",
+      "class": {}
     },
     "skills": {
       "acr": {
         "value": 0,
         "ability": "dex",
+        "mod": 2,
         "bonus": 0,
-        "mod": 1,
+        "passive": 12,
         "prof": 0,
-        "total": 1,
-        "passive": 11
+        "total": 2
       },
       "ani": {
         "value": 0,
         "ability": "wis",
+        "mod": 1,
         "bonus": 0,
-        "mod": -2,
+        "passive": 11,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": 1
       },
       "arc": {
         "value": 0,
         "ability": "int",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "ath": {
-        "value": 0,
+        "value": 1,
         "ability": "str",
-        "bonus": 0,
         "mod": 3,
-        "prof": 0,
-        "total": 3,
-        "passive": 13
+        "bonus": 0,
+        "passive": 15,
+        "prof": 2,
+        "total": 5
       },
       "dec": {
         "value": 0,
         "ability": "cha",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "his": {
         "value": 0,
         "ability": "int",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "ins": {
         "value": 0,
         "ability": "wis",
+        "mod": 1,
         "bonus": 0,
-        "mod": -2,
+        "passive": 11,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": 1
       },
       "itm": {
         "value": 0,
         "ability": "cha",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "inv": {
         "value": 0,
         "ability": "int",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "med": {
         "value": 0,
         "ability": "wis",
+        "mod": 1,
         "bonus": 0,
-        "mod": -2,
+        "passive": 11,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": 1
       },
       "nat": {
         "value": 0,
         "ability": "int",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "prc": {
         "value": 1,
         "ability": "wis",
+        "mod": 1,
         "bonus": 0,
-        "mod": -2,
-        "prof": 3,
-        "total": 1,
-        "passive": 11
+        "passive": 13,
+        "prof": 2,
+        "total": 3
       },
       "prf": {
         "value": 0,
         "ability": "cha",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "per": {
         "value": 0,
         "ability": "cha",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "rel": {
         "value": 0,
         "ability": "int",
-        "bonus": 0,
         "mod": -2,
+        "bonus": 0,
+        "passive": 8,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": -2
       },
       "slt": {
         "value": 0,
         "ability": "dex",
+        "mod": 2,
         "bonus": 0,
-        "mod": 1,
+        "passive": 12,
         "prof": 0,
-        "total": 1,
-        "passive": 11
+        "total": 2
       },
       "ste": {
         "value": 0,
         "ability": "dex",
+        "mod": 2,
         "bonus": 0,
-        "mod": 1,
+        "passive": 12,
         "prof": 0,
-        "total": 1,
-        "passive": 11
+        "total": 2
       },
       "sur": {
         "value": 0,
         "ability": "wis",
+        "mod": 1,
         "bonus": 0,
-        "mod": -2,
+        "passive": 11,
         "prof": 0,
-        "total": -2,
-        "passive": 8
+        "total": 1
       }
     },
     "traits": {
-      "size": "lg",
-      "senses": "darkvision 60 ft., passive Perception 11 ",
+      "size": "med",
+      "senses": "",
       "languages": {
         "value": [],
-        "custom": "Slaad;telepathy 60 ft."
+        "custom": ""
       },
       "di": {
         "value": [],
         "custom": ""
       },
       "dr": {
-        "value": [
-          "acid",
-          "cold",
-          "fire",
-          "lightning",
-          "thunder"
-        ],
+        "value": [],
         "custom": ""
       },
       "dv": {
@@ -293,6 +297,9 @@
       "ci": {
         "value": [],
         "custom": ""
+      },
+      "perception": {
+        "_deprecated": true
       }
     },
     "currency": {
@@ -305,17 +312,17 @@
     "spells": {
       "spell1": {
         "value": 0,
-        "max": 4,
+        "max": 0,
         "override": null
       },
       "spell2": {
         "value": 0,
-        "max": 3,
+        "max": 0,
         "override": null
       },
       "spell3": {
         "value": 0,
-        "max": 2,
+        "max": 0,
         "override": null
       },
       "spell4": {
@@ -353,25 +360,17 @@
         "max": 0,
         "override": null,
         "level": 0
+      },
+      "spell0": {
+        "value": 0,
+        "max": 0
       }
     },
     "bonuses": {
-      "mwak": {
-        "attack": "",
-        "damage": ""
-      },
-      "rwak": {
-        "attack": "",
-        "damage": ""
-      },
-      "msak": {
-        "attack": "",
-        "damage": ""
-      },
-      "rsak": {
-        "attack": "",
-        "damage": ""
-      },
+      "mwak": "",
+      "rwak": "",
+      "msak": "",
+      "rsak": "",
       "abilities": {
         "check": "",
         "save": "",
@@ -379,15 +378,19 @@
       },
       "spell": {
         "dc": ""
-      }
+      },
+      "damage": "",
+      "abilityCheck": "",
+      "abilitySave": "",
+      "skillCheck": ""
     },
     "resources": {
       "legact": {
-        "value": 0,
+        "value": null,
         "max": 0
       },
       "legres": {
-        "value": 0,
+        "value": null,
         "max": 0
       },
       "lair": {
@@ -398,21 +401,24 @@
   },
   "sort": 100001,
   "flags": {
-    "dnd5e": {
-      "conditions": []
-    },
+    "_sheetTab-sidebar": "abilities",
+    "_sheetTab-primary": "biography",
     "exportSource": {
       "world": "testing",
       "system": "dnd5e",
       "coreVersion": "0.6.5",
       "systemVersion": 0.93
+    },
+    "dnd5e": {
+      "conditions": []
     }
   },
+  "img": "systems/dnd5e/tokens/beast/Ape.png",
   "token": {
     "flags": {},
-    "name": "red",
-    "displayName": 0,
-    "img": "icons/svg/mystery-man.svg",
+    "name": "Ape",
+    "displayName": 20,
+    "img": "systems/dnd5e/tokens/beast/Ape.png",
     "tint": null,
     "width": 1,
     "height": 1,
@@ -427,301 +433,141 @@
     "sightAngle": 360,
     "lightAngle": 360,
     "lightAlpha": 1,
-    "actorId": "KzYUtmHStxc4ejGf",
+    "actorId": "ybFSOqwopIIGaDWi",
     "actorLink": false,
     "actorData": {},
     "disposition": -1,
-    "displayBars": 0,
-    "bar1": {},
+    "displayBars": 40,
+    "bar1": {
+      "attribute": "attributes.hp"
+    },
     "bar2": {},
     "randomImg": false
   },
   "items": [
     {
-      "_id": "mAVl5FCGTRxoWNuZ",
-      "flags": {},
-      "name": "Magic Resistance",
-      "type": "feat",
-      "img": "icons/svg/mystery-man.svg",
-      "data": {
-        "description": {
-          "value": "The slaad has advantage on saving throws against spells and other magical effects. ",
-          "chat": "",
-          "unidentified": ""
-        },
-        "source": "",
-        "activation": {
-          "type": "action",
-          "cost": 0,
-          "condition": ""
-        },
-        "duration": {
-          "value": null,
-          "units": ""
-        },
-        "target": {
-          "value": null,
-          "units": "",
-          "type": ""
-        },
-        "range": {
-          "value": null,
-          "long": null,
-          "units": ""
-        },
-        "uses": {
-          "value": 0,
-          "max": 0,
-          "per": ""
-        },
-        "consume": {
-          "type": "",
-          "target": "",
-          "amount": null
-        },
-        "ability": null,
-        "actionType": "",
-        "attackBonus": 0,
-        "chatFlavor": "",
-        "critical": null,
-        "damage": {
-          "parts": [],
-          "versatile": ""
-        },
-        "formula": "",
-        "save": {
-          "ability": "",
-          "dc": null,
-          "scaling": "spell"
-        },
-        "requirements": "",
-        "recharge": {
-          "value": null,
-          "charged": false
-        }
+      "_id": "hbxC3Wg3H8cSIvM0",
+      "flags": {
+        "_sheetTab": "description"
       },
-      "sort": 100000,
-      "labels": {
-        "featType": "Action",
-        "activation": "Action",
-        "target": "",
-        "range": "",
-        "duration": "",
-        "recharge": "Recharge [null]",
-        "save": "",
-        "damage": "",
-        "damageTypes": ""
-      },
-      "isStack": false,
-      "hasUses": false,
-      "isOnCooldown": false,
-      "isDepleted": false,
-      "hasTarget": false
-    },
-    {
-      "_id": "3pA6D5nUK7GMYBut",
-      "flags": {},
-      "name": "Regeneration",
-      "type": "feat",
-      "img": "icons/svg/mystery-man.svg",
-      "data": {
-        "description": {
-          "value": "The slaad regains 10 hit points at the start of its turn if it has at least 1 hit point. ",
-          "chat": "",
-          "unidentified": ""
-        },
-        "source": "",
-        "activation": {
-          "type": "action",
-          "cost": 0,
-          "condition": ""
-        },
-        "duration": {
-          "value": null,
-          "units": ""
-        },
-        "target": {
-          "value": null,
-          "units": "",
-          "type": ""
-        },
-        "range": {
-          "value": null,
-          "long": null,
-          "units": ""
-        },
-        "uses": {
-          "value": 0,
-          "max": 0,
-          "per": ""
-        },
-        "consume": {
-          "type": "",
-          "target": "",
-          "amount": null
-        },
-        "ability": null,
-        "actionType": "",
-        "attackBonus": 0,
-        "chatFlavor": "",
-        "critical": null,
-        "damage": {
-          "parts": [],
-          "versatile": ""
-        },
-        "formula": "",
-        "save": {
-          "ability": "",
-          "dc": null,
-          "scaling": "spell"
-        },
-        "requirements": "",
-        "recharge": {
-          "value": null,
-          "charged": false
-        }
-      },
-      "sort": 100000,
-      "labels": {
-        "featType": "Action",
-        "activation": "Action",
-        "target": "",
-        "range": "",
-        "duration": "",
-        "recharge": "Recharge [null]",
-        "save": "",
-        "damage": "",
-        "damageTypes": ""
-      },
-      "isStack": false,
-      "hasUses": false,
-      "isOnCooldown": false,
-      "isDepleted": false,
-      "hasTarget": false
-    },
-    {
-      "_id": "DMWoNN9XhVTlCbuP",
-      "flags": {},
       "name": "Multiattack",
-      "type": "weapon",
-      "img": "icons/svg/mystery-man.svg",
+      "type": "feat",
+      "img": "systems/dnd5e/icons/skills/weapon_24.jpg",
       "data": {
         "description": {
-          "value": "The slaad makes three attacks: one with its bite and two with its claws. ",
+          "value": "<p>The ape makes two fist attacks.</p>",
           "chat": "",
           "unidentified": ""
         },
-        "source": "",
-        "quantity": 1,
-        "weight": 0,
-        "price": 0,
-        "attuned": false,
-        "equipped": true,
-        "rarity": "",
-        "identified": true,
+        "source": null,
         "activation": {
-          "type": "action",
-          "cost": 1,
+          "type": "none",
+          "cost": 0,
           "condition": ""
         },
         "duration": {
-          "value": null,
+          "value": "",
           "units": ""
         },
         "target": {
-          "value": null,
+          "value": "",
           "units": "",
           "type": ""
         },
         "range": {
-          "value": null,
+          "value": "",
           "long": null,
           "units": ""
         },
         "uses": {
-          "value": 0,
-          "max": 0,
-          "per": ""
+          "value": "",
+          "max": "",
+          "per": null,
+          "type": ""
         },
         "consume": {
           "type": "",
-          "target": "",
+          "target": null,
           "amount": null
         },
         "ability": "",
-        "actionType": "mwak",
+        "actionType": null,
         "attackBonus": 0,
         "chatFlavor": "",
         "critical": null,
         "damage": {
           "parts": [],
-          "versatile": ""
+          "versatile": "",
+          "value": ""
         },
         "formula": "",
         "save": {
           "ability": "",
           "dc": null,
-          "scaling": "spell"
+          "scaling": "spell",
+          "value": ""
         },
-        "weaponType": "natural",
-        "properties": {
-          "amm": false,
-          "fin": false,
-          "fir": false,
-          "foc": false,
-          "hvy": false,
-          "lgt": false,
-          "lod": false,
-          "rch": false,
-          "rel": false,
-          "ret": false,
-          "spc": false,
-          "thr": false,
-          "two": false,
-          "ver": false
+        "requirements": "",
+        "recharge": {
+          "value": null,
+          "charged": false
         },
-        "proficient": true
+        "time": {
+          "value": "",
+          "_deprecated": true
+        },
+        "damageType": {
+          "value": "",
+          "_deprecated": true
+        }
       },
       "sort": 100000,
       "labels": {
-        "activation": "1 Action",
+        "featType": "Action",
+        "activation": "None",
         "target": "",
         "range": "",
         "duration": "",
-        "recharge": "Recharge [undefined]",
+        "recharge": "Recharge [null]",
         "save": "",
         "damage": "",
         "damageTypes": ""
       },
       "isStack": false,
       "hasUses": false,
+      "isOnCooldown": false,
+      "isDepleted": false,
       "hasTarget": false
     },
     {
-      "_id": "uoQeOGxbQopr7sdb",
+      "_id": "jxC1VNaCf2VXlD6C",
       "flags": {
+        "_sheetTab": "details",
+        "mess": {
+          "templateTexture": ""
+        },
         "dynamiceffects": {
           "equipActive": false,
           "alwaysActive": false,
           "effects": []
         }
       },
-      "name": "Bite",
+      "name": "Fist",
       "type": "weapon",
-      "img": "icons/svg/mystery-man.svg",
+      "img": "systems/dnd5e/icons/skills/fire_07.jpg",
       "data": {
         "description": {
-          "value": "Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (2d4 + 3) piercing damage. ",
+          "value": "<p>The ape lunges out with its fist.</p>",
           "chat": "",
           "unidentified": ""
         },
         "source": "",
         "quantity": 1,
         "weight": 0,
-        "price": 0,
+        "price": null,
         "attuned": false,
         "equipped": true,
-        "rarity": "",
+        "rarity": "Common",
         "identified": true,
         "activation": {
           "type": "action",
@@ -738,9 +584,9 @@
           "type": ""
         },
         "range": {
-          "value": "5",
+          "value": null,
           "long": null,
-          "units": ""
+          "units": "touch"
         },
         "uses": {
           "value": 0,
@@ -752,7 +598,7 @@
           "target": "",
           "amount": null
         },
-        "ability": "",
+        "ability": "str",
         "actionType": "mwak",
         "attackBonus": 0,
         "chatFlavor": "",
@@ -760,8 +606,8 @@
         "damage": {
           "parts": [
             [
-              "(2d4 + 3)",
-              "piercing"
+              "1d6 + @mod",
+              "bludgeoning"
             ]
           ],
           "versatile": ""
@@ -789,42 +635,60 @@
           "two": false,
           "ver": false
         },
-        "proficient": true
+        "proficient": true,
+        "bonus": {
+          "value": 0,
+          "_deprecated": true
+        },
+        "damageType": {
+          "value": "",
+          "_deprecated": true
+        },
+        "damage2": {
+          "value": "",
+          "_deprecated": true
+        },
+        "damage2Type": {
+          "value": "",
+          "_deprecated": true
+        }
       },
-      "sort": 100000,
+      "sort": 200000,
       "labels": {
         "activation": "1 Action",
         "target": "",
-        "range": "5",
+        "range": "Touch",
         "duration": "",
         "recharge": "Recharge [undefined]",
         "save": "",
-        "damage": "(2d4 + 3)",
-        "damageTypes": "Piercing"
+        "damage": "1d6 + @mod",
+        "damageTypes": "Bludgeoning"
       },
       "isStack": false,
       "hasUses": false,
       "hasTarget": false
     },
     {
-      "_id": "kx7D5nrZMaiI7s48",
-      "flags": {},
-      "name": "Claw",
+      "_id": "NsTx3MUaYkEI2t8M",
+      "flags": {
+        "_sheetTab": "details"
+      },
+      "name": "Rock",
       "type": "weapon",
-      "img": "icons/svg/mystery-man.svg",
+      "img": "systems/dnd5e/icons/spells/rock-plain-1.jpg",
       "data": {
         "description": {
-          "value": "Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage. If the target is a humanoid, it must succeed on a DC 14 Constitution saving throw or be infected with a disease—a minuscule slaad egg. A humanoid host can carry only one slaad egg to term at a time. Over three months, the egg moves to the chest cavity, gestates, and forms a slaad tadpole. In the 24-hour period before giving birth, the host starts to feel unwell, its speed is halved, and it has disadvantage on attack rolls, ability checks, and saving throws. At birth, the tadpole chews its way through vital organs and out of the host's chest in 1 round, killing the host in the process. If the disease is cured before the tadpole's emergence, the unborn slaad is disintegrated. ",
+          "value": "<p>The ape throws a rock at its target.</p>",
           "chat": "",
           "unidentified": ""
         },
         "source": "",
         "quantity": 1,
-        "weight": 0,
-        "price": 0,
+        "weight": null,
+        "price": null,
         "attuned": false,
         "equipped": true,
-        "rarity": "",
+        "rarity": "Common",
         "identified": true,
         "activation": {
           "type": "action",
@@ -836,14 +700,14 @@
           "units": ""
         },
         "target": {
-          "value": null,
+          "value": 1,
           "units": "",
-          "type": ""
+          "type": "creature"
         },
         "range": {
-          "value": "5",
-          "long": null,
-          "units": ""
+          "value": 25,
+          "long": 50,
+          "units": "ft"
         },
         "uses": {
           "value": 0,
@@ -855,7 +719,7 @@
           "target": "",
           "amount": null
         },
-        "ability": "",
+        "ability": "str",
         "actionType": "mwak",
         "attackBonus": 0,
         "chatFlavor": "",
@@ -863,8 +727,8 @@
         "damage": {
           "parts": [
             [
-              "(1d8 + 3)",
-              "piercing"
+              "1d6 + @mod",
+              "bludgeoning"
             ]
           ],
           "versatile": ""
@@ -877,7 +741,7 @@
         },
         "weaponType": "natural",
         "properties": {
-          "amm": false,
+          "amm": true,
           "fin": false,
           "fir": false,
           "foc": false,
@@ -892,24 +756,38 @@
           "two": false,
           "ver": false
         },
-        "proficient": true
+        "proficient": true,
+        "bonus": {
+          "value": 0,
+          "_deprecated": true
+        },
+        "damageType": {
+          "value": "",
+          "_deprecated": true
+        },
+        "damage2": {
+          "value": "",
+          "_deprecated": true
+        },
+        "damage2Type": {
+          "value": "",
+          "_deprecated": true
+        }
       },
-      "sort": 100000,
+      "sort": 300000,
       "labels": {
         "activation": "1 Action",
-        "target": "",
-        "range": "5",
+        "target": "1 Creature",
+        "range": "25 / 50 Feet",
         "duration": "",
         "recharge": "Recharge [undefined]",
         "save": "",
-        "damage": "(1d8 + 3)",
-        "damageTypes": "Piercing"
+        "damage": "1d6 + @mod",
+        "damageTypes": "Bludgeoning"
       },
       "isStack": false,
       "hasUses": false,
-      "hasTarget": false
+      "hasTarget": true
     }
-  ],
-  "_id": "KzYUtmHStxc4ejGf",
-  "img": "icons/svg/mystery-man.svg"
+  ]
 }

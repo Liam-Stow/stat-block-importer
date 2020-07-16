@@ -54,10 +54,6 @@
       "critical": null,
       "damage": {
         "parts": [
-          [
-            "1d6+@mod",
-            ""
-          ]
         ],
         "versatile": ""
       },
