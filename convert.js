@@ -186,7 +186,7 @@ function convert(text) {
             .filter(word => word !== "")
             .forEach(language => {
                 if (FOUNDRY_DEFAULT_LANGUAGES.includes(language)) {
-                    npcData.traits.languages.value.push(language);
+                    npcData.traits.languages.value.push(language.toLowerCase());
                 } else {
                     npcData.traits.languages.custom += language + ';';
                 }
