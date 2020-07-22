@@ -1,14 +1,4 @@
 
-$(document).ready(function () {
-    let inputElement = document.getElementById('inputfile');
-    inputElement.onchange = function (event) {
-        let fileReader = new FileReader();
-        fileReader.onload = () => {
-            convert(fileReader.result);
-        }
-        fileReader.readAsText(inputElement.files.item(0));
-    }
-})
 
 
 // Remove a number of characters equal to endTrim from the end of str
@@ -134,7 +124,7 @@ function convert(text) {
     const CHALLENGE_LINE = findLineByStartWord(LINES, "Challenge");
     const ACTIONS_LINE = findLineByStartWord(LINES, "ACTIONS");
 
-    $.getJSON("emptyNpcData.json", npcData => {
+    $.getJSON("json-templates/emptyNpcData.json", npcData => {
         // Easy ones
         npcData.traits.size = sizes[getWords(LINES, attrToWordIndex['size'])];
         npcData.details.type = getWords(LINES, attrToWordIndex['type']);
@@ -217,7 +207,7 @@ function convert(text) {
     const ABILITY_LINES = LINES.slice(CHALLENGE_LINE+1, ACTIONS_LINE);
     let abilities = readFeatures(ABILITY_LINES);
     // Make Foundry Items
-    $.getJSON("abilityItem.json", emptyAbility => {
+    $.getJSON("json-templates/abilityItem.json", emptyAbility => {
         let abilityItems = []
         for (let ability in abilities) {
             let newItem = JSON.parse(JSON.stringify(emptyAbility)); // stringify then parse to make a copy rather than reference original
@@ -275,7 +265,7 @@ function convert(text) {
 
     // Make Foundry Items
     let foundryActionItems = [];
-    $.getJSON("actionItem.json", emptyFoundryAction => {
+    $.getJSON("json-templates/actionItem.json", emptyFoundryAction => {
         for (action in detailedActions) {
             let foundryAction = JSON.parse(JSON.stringify(emptyFoundryAction)); // stringify then parse to make a copy rather than reference original
             foundryAction.name = action;
