@@ -1,0 +1,41 @@
+GRELL
+Medium aberration,
+Armor Class 12
+Hit Points 55 (10ds + 10)
+Speed 10 ft., fly 30 ft. (hover)
+STR
+15 (42)
+DEX 
+14 (+2)
+CON
+13 (+1)
+INT
+12 (+1)
+WIZ
+11 (+0)
+CHA 
+9 (-1)
+Skills Perception +4, Stealth +6
+Immunities lightning
+Condition Immunities blinded. prone
+Senses blindsight ft. (blind this radius),
+passive Perception 14
+Languages Grell
+Challenge 3 (700 XP)
+ACTIONS
+Muftiattack. The grell makes two attacks: one with its tentacles
+and one with its beak.
+Tentacles. Melee Weapon Attack: +4 to hit, reach 10 ft., one
+creature. Hit: 7 (IdlO 2) piercing damage, and the target
+must succeed on a DC Il Constitution saving throw or be
+poisoned for minute. poisoned target is paralyzed, and
+it Can repeat the saving throw at the end of each Of its turns,
+ending the effect on a success.
+The target is also grappled 15). If the target is
+Medium or smaller, it is also restrained until this grapple ends.
+While grappling the target, the gell has advantage on attack
+rolls against it and can't use this attack against other targets.
+When the grell moves. any Medium or smaller target it is
+grappling moves with it.
+Beak. Melee Weapon Attack: +4 to hit, reach 5 one Creature.
+Hit: 7(2d4+2) piercing damage.

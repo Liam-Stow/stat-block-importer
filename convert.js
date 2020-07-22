@@ -95,6 +95,7 @@ function isAttackType(str) {
 // Check if a line starts a new character feature
 // line is a string, returns bool
 function lineStartsFeature(line) {
+    if (line.length === 1) return false;
     return  ((getLastItem(line[0]) === '.' && isUpperCase(line[0][0])) 
             || 
             (getLastItem(line[1]) === '.')  && isUpperCase(line[1][0]));
@@ -108,6 +109,7 @@ function readFeatures(featuresLines) {
     let featureDescription = "";
     featuresLines.forEach(line => {
         let words = line.split(' ');
+        console.log(words)
         if  (lineStartsFeature(words)) {
             if (featureName !== "")
                 features[featureName] = featureDescription;
@@ -150,14 +152,16 @@ function convert(text) {
         npcData.abilities.cha.value = parseInt(getWords(LINES, attrToWordIndex['cha']));
 
         // Proficient Skills
-        LINES
-            .find(line => line.split(' ')[0] === "Skills") // Find the skills line
-            .split(' ')                         // Turn line into array of words
-            .slice(1)                           // Get rid of the word "Skills" from the start of the line
-            .filter(word => word[0] !== '+' && word[0] !== '-') // Get rid of bonus values
-            .filter(word => word !== "")        // Get rid of empty words
-            .map(skill => skillsMap[skill])     // Convert to foundry abbreviations
-            .forEach(skill => npcData.skills[skill].value = 1); // Save proficiency to output NPC
+        if (LINES.find(line => line.split(' ')[0] === "Skills") !== undefined) {
+            LINES
+                .find(line => line.split(' ')[0] === "Skills") // Find the skills line
+                .split(' ')                         // Turn line into array of words
+                .slice(1)                           // Get rid of the word "Skills" from the start of the line
+                .filter(word => word[0] !== '+' && word[0] !== '-') // Get rid of bonus values
+                .filter(word => word !== "")        // Get rid of empty words
+                .map(skill => skillsMap[skill])     // Convert to foundry abbreviations
+                .forEach(skill => npcData.skills[skill].value = 1); // Save proficiency to output NPC
+        }
 
         // Resistances
         let resistancesLine = LINES.find(line => line.match(/^Damage Resistances/) !== null);
@@ -225,6 +229,7 @@ function convert(text) {
     })
 
     // Actions
+    console.log("----attacks-----")
     const ACTION_LINES = LINES.slice(ACTIONS_LINE+1);
     let actions = readFeatures(ACTION_LINES);
     let detailedActions = {}
@@ -233,6 +238,7 @@ function convert(text) {
     for (let actionName in actions) {
         let actionDetails = {}
         let detailsString = actions[actionName];
+        console.log(actionName, ":", detailsString)
         
         if (isAttack(detailsString)) {
             // add all attack details
