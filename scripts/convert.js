@@ -160,6 +160,15 @@ export const convert = function (text) {
         .split('\n')
         .filter(line => line !== "" && line !== " "); 
 
+    // Size
+    setDeepJson(actorOut, ["traits","size"], sizes[getWords(LINES, attrToWordIndex['size'])]);
+
+    // Type
+    setDeepJson(actorOut, ["details","type"], getWords(LINES, attrToWordIndex['type']));
+
+    // Alignment
+    setDeepJson(actorOut, ["details","alignment"], getWords(LINES, attrToWordIndex['alignment']));
+
     // do AC
     setDeepJson(actorOut, ["attributes","ac","value"], findTextByStartWords(LINES, ["Armor","Class"]));
 
@@ -194,14 +203,32 @@ export const convert = function (text) {
 
     // Resistances
     setDeepJson(actorOut, ["traits","dr","value"], []);
-    let resistancesLine = LINES.find(line => line.match(/^Damage Resistances/) !== null);
+    let resistancesLine = findTextByStartWords(LINES, ["Damage","Resistances"]);
     if (resistancesLine !== undefined) {
         resistancesLine
-            .split(' ')
-            .slice(2)
+            .split('; ')[0] // Ignore resistances after a ;, they will need to be treated differently.
+            .split(', ')
             .filter(word => word !== "") // Get rid of empty words
-            .map(resistance => resistance.replace(/,$/, "")) // Remove comma from end of each damage type
+            .map(s=>s.toLowerCase())
             .forEach(resistance => actorOut.traits.dr.value.push(resistance));
+        if (resistancesLine.includes("Bludgeoning, Piercing, and Slashing from Nonmagical Attacks")) {
+            actorOut.traits.dr.value.push("physical");
+        }
+    }
+
+    // Damage Immunities
+    setDeepJson(actorOut, ["traits","di","value"], []);
+    let immunitiesLine = findTextByStartWords(LINES, ["Damage","Immunities"]);
+    if (immunitiesLine !== undefined) {
+        immunitiesLine
+            .split('; ')[0] // Ignore resistances after a ;, they will need to be treated differently.
+            .split(', ')
+            .filter(word => word !== "") // Get rid of empty words
+            .map(s=>s.toLowerCase())
+            .forEach(immunity => actorOut.traits.dr.value.push(immunity));
+        if (immunitiesLine.includes("Bludgeoning, Piercing, and Slashing from Nonmagical Attacks")) {
+            actorOut.traits.di.value.push("physical");
+        }
     }
 
     // Senses
@@ -240,7 +267,8 @@ export const convert = function (text) {
         .replace(/\(/, '')  // Remove bracket from around number
     setDeepJson(actorOut, ["details","xp","value"], parseInt(xpValue));
 
-    make("newActor", actorOut, undefined)
+    const name = LINES[0];
+    make(name, actorOut, undefined)
 
     return actorOut;
 }
