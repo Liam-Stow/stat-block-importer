@@ -83,15 +83,24 @@ function findLineByStartWord(lines, startWord) {
 // those words themselves).
 function findTextByStartWords(lines, startWords) {
     const count = startWords.length;
-    return lines.find(line => {
+    console.log("lines")
+    console.log(lines)
+    let foundLine = lines.find(line => {
+        if (arraysEqual(startWords, ["Damage","Immunities"])) {
+            console.log(line)
+        }
         const words = line.split(' ');
         if (words.length >= count) {
             return arraysEqual(words.slice(0,count), startWords);
         }
         return false;
-    }).split(' ')
-    .slice(count)
-    .join(' ');
+    })
+    if (foundLine != undefined) {
+        return foundLine.split(' ')
+                        .slice(count)
+                        .join(' ');
+    }
+    return undefined;
 }
 
 function getLastItem(indexable) {
@@ -150,6 +159,10 @@ function readFeatures(featuresLines) {
     features[featureName] = featureDescription;
 
     return features;
+}
+
+function addTrait() {
+
 }
 
 export const convert = function (text) {
@@ -225,10 +238,36 @@ export const convert = function (text) {
             .split(', ')
             .filter(word => word !== "") // Get rid of empty words
             .map(s=>s.toLowerCase())
-            .forEach(immunity => actorOut.traits.dr.value.push(immunity));
+            .forEach(immunity => actorOut.traits.di.value.push(immunity));
         if (immunitiesLine.includes("Bludgeoning, Piercing, and Slashing from Nonmagical Attacks")) {
             actorOut.traits.di.value.push("physical");
         }
+    }
+
+    // Damage Vulnerabilities 
+    setDeepJson(actorOut, ["traits","dv","value"], []);
+    let vulnerabilitiesLine = findTextByStartWords(LINES, ["Damage","Vulnerabilities"]);
+    if (vulnerabilitiesLine !== undefined) {
+        vulnerabilitiesLine
+            .split('; ')[0] // Ignore resistances after a ;, they will need to be treated differently.
+            .split(', ')
+            .filter(word => word !== "") // Get rid of empty words
+            .map(s=>s.toLowerCase())
+            .forEach(immunity => actorOut.traits.dv.value.push(immunity));
+        if (vulnerabilitiesLine.includes("Bludgeoning, Piercing, and Slashing from Nonmagical Attacks")) {
+            actorOut.traits.dv.value.push("physical");
+        }
+    }
+
+    // Condition Immunities
+    setDeepJson(actorOut, ["traits","ci","value"], []);
+    let conditionImmunitiesLine = findTextByStartWords(LINES, ["Condition","Immunities"]);
+    if (conditionImmunitiesLine !== undefined) {
+        conditionImmunitiesLine
+            .split(', ')
+            .filter(word => word !== "") // Get rid of empty words
+            .map(s=>s.toLowerCase())
+            .forEach(immunity => actorOut.traits.ci.value.push(immunity));
     }
 
     // Senses
@@ -239,7 +278,7 @@ export const convert = function (text) {
 
     // Languages
     setDeepJson(actorOut, ["traits","languages","value"], []);
-    setDeepJson(actorOut, ["traits","languages","custom"], []);
+    setDeepJson(actorOut, ["traits","languages","custom"], "");
     const FOUNDRY_DEFAULT_LANGUAGES = ["Aarakocra", "Abyssal", "Aquan", "Auran", "Celestial", "Common", "Deep Speech", "Draconic", "Druidic", "Dwarvish", "Elvish", "Giant", "Gith", "Gnoll", "Gnomish", "Goblin", "Halfling", "Ignan", "Infernal", "Orc", "Primordial", "Sylvan", "Terran", "Thieves' Cant", "Undercommon"]
     LINES
         .find(line => line.split(' ')[0] === "Languages") 
