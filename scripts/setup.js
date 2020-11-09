@@ -1,7 +1,7 @@
 import {convert} from './convert.js'
 
 Hooks.on("renderActorDirectory", (app, html, data) => {
-    const importStatButton = $('<button class="import-stat-button"> Import Stat Block from OneNote</button>');
+    const importStatButton = $('<button class="import-stat-button"> <i class="fas fa-camera"></i> Import Stat Block from OneNote</button>');
     
     const inputDialog = new Dialog({
         title: "Input stats from text",
@@ -21,7 +21,7 @@ Hooks.on("renderActorDirectory", (app, html, data) => {
     })
     
     importStatButton.click(ev => inputDialog.render(true));
-    html.find('.directory-footer').append(importStatButton);
+    html.find('.header-actions').after(importStatButton);
 })
 
 
