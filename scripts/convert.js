@@ -11,6 +11,15 @@ function setDeepJson(root,path,value) {
     setDeepJson(root[path[0]], path.slice(1), value);
 }
 
+
+function concatJson(object1, object2) {
+    for (let key in object2) {
+        object1[key] = object2[key]
+    }
+    return object1
+}
+
+
 function arraysEqual(a,b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
@@ -165,6 +174,24 @@ function addTrait() {
 
 }
 
+
+function parseMovement(movementString) {
+    let movement = {}
+    movementString
+        .split(', ')
+        .map(s=>s.slice(0,-4))
+        .forEach(speedString => {
+            let pair = speedString.split(' ')
+            if (pair.length > 1) {
+                movement[pair[0]] = pair[1]
+            } else {
+                movement.walk = pair[0]
+            }
+        })
+    return movement
+}
+
+
 export const convert = function (text) {
     let actorOut = {};
     let doStats = true;
@@ -183,7 +210,7 @@ export const convert = function (text) {
     setDeepJson(actorOut, ["details","alignment"], getWords(LINES, attrToWordIndex['alignment']));
 
     // do AC
-    setDeepJson(actorOut, ["attributes","ac","value"], findTextByStartWords(LINES, ["Armor","Class"]));
+    setDeepJson(actorOut, ["attributes","ac","value"], findTextByStartWords(LINES, ["Armor","Class"]).split(' ')[0]);
 
     // do HP
     let hpData = findTextByStartWords(LINES, ["Hit","Points"]).split(' ');
@@ -192,9 +219,9 @@ export const convert = function (text) {
     setDeepJson(actorOut,["attributes","hp","formula"], hpData.slice(1).join(' '));
 
     // do speed
-    let speedData = findTextByStartWords(LINES, ["Speed"]).split(',');
-    setDeepJson(actorOut, ["attributes","speed","value"], speedData[0]);
-    setDeepJson(actorOut, ["attributes","speed","special"], speedData.slice(1).join());
+    let movementData = findTextByStartWords(LINES, ["Speed"])
+    movementData = parseMovement(movementData)
+    setDeepJson(actorOut, ["attributes","movement"], movementData);
 
     if (doStats) {
         ["str", "dex", "con", "int", "wis", "cha"].forEach(stat => {

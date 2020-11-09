@@ -21,7 +21,7 @@ const attrToWordIndex = {
     'name' : [0,[0]],
     'size' : [1,[0]],
     'type' : [1,[1]],
-    'alignment' : [0,[2,3]],
+    'alignment' : [1,[2,3]],
     'ac' : [2,[2]],
     'hpval' : [3,[2]],
     'hpmax' : [3,[2]],
