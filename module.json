@@ -6,13 +6,11 @@
     "version": "1.0.0",
     "minimumCoreVersion": "0.7.6",
     "compatibleCoreVersion": "0.7.6",
-    "scripts": [
-      "scripts/makeActor.js",
-      "scripts/maps.js",
-      "scripts/convert.js"
-    ],
     "esmodules": [
-      "scripts/setup.js"
+      "scripts/setup.js",
+      "scripts/convert.js",
+      "scripts/maps.js",
+      "scripts/parsing.js"
     ],
     "styles": [
       "styles/styles.css"

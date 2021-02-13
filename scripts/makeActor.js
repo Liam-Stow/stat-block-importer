@@ -1,7 +1,4 @@
-export const make = function (name, data, items) {
-  console.log("making actor...");
-  console.log(data)
-
+const make = function (name, data, items) {
   let actorPromise= Actor.create({
     name: name,
     type: "npc",   

@@ -47,7 +47,7 @@ function getFirstWords(str, numberOfWords, endTrim=0) {
 
 // given an array of text lines and a [lineNumber, [word1, word2]] position array,
 // make a string of the selected words. 
-export function getWords(textArray, position) {
+export function findTextByPosition(textArray, position) {
     let lineIndicies = position[0];
     let wordIndicies = position[1];
     let line = textArray[lineIndicies].split(' ');
@@ -56,19 +56,19 @@ export function getWords(textArray, position) {
 }
 
 
-function setDataFromStaticPositionText(foundryJson, lines) {
-    let prevJson
-    for (attributeName in attributeToKey) {
-        let currentJson = foundryJson;
-        let keyPath = attributeToKey[attributeName].split('.');
-        keyPath.forEach(nextKey => {
-            prevJson = foundryJson;
-            currentJson = currentJson[nextKey];
-        })
-        prevJson[keyPath[keyPath.length-1]] = getWords(lines, attrToWordIndex[attributeName])
-    }
-    return prevJson;
-}
+// function setDataFromStaticPositionText(foundryJson, lines) {
+//     let prevJson
+//     for (attributeName in attributeToKey) {
+//         let currentJson = foundryJson;
+//         let keyPath = attributeToKey[attributeName].split('.');
+//         keyPath.forEach(nextKey => {
+//             prevJson = foundryJson;
+//             currentJson = currentJson[nextKey];
+//         })
+//         prevJson[keyPath[keyPath.length-1]] = getWords(lines, attrToWordIndex[attributeName])
+//     }
+//     return prevJson;
+// }
 
 
 function saveJson(json, fileName) {
@@ -90,11 +90,10 @@ function findLineByStartWord(lines, startWord) {
 // those words themselves).
 export function findTextByStartWords(lines, startWords) {
     const count = startWords.length;
-    console.log("lines")
-    console.log(lines)
+    // console.log("lines")
+    // console.log(lines)
     let foundLine = lines.find(line => {
         if (arraysEqual(startWords, ["Damage","Immunities"])) {
-            console.log(line)
         }
         const words = line.split(' ');
         if (words.length >= count) {
@@ -107,7 +106,7 @@ export function findTextByStartWords(lines, startWords) {
                         .slice(count)
                         .join(' ');
     }
-    return undefined;
+    return "";
 }
 
 function getLastItem(indexable) {
@@ -152,7 +151,6 @@ function readFeatures(featuresLines) {
     let featureDescription = "";
     featuresLines.forEach(line => {
         let words = line.split(' ');
-        console.log(words)
         if  (lineStartsFeature(words)) {
             if (featureName !== "")
                 features[featureName] = featureDescription;
@@ -168,13 +166,17 @@ function readFeatures(featuresLines) {
     return features;
 }
 
-function addTrait() {
-
-}
-
-
 export function parseMovement(movementString) {
-    let movement = {}
+    let movement = {
+        burrow: 0,
+        climb: 0,
+        fly: 0,
+        swim: 0,
+        walk: 0,
+        units: "ft",
+        hover: false
+    }
+
     movementString
         .split(', ')
         .map(s=>s.slice(0,-4))
@@ -186,6 +188,54 @@ export function parseMovement(movementString) {
                 movement.walk = pair[0]
             }
         })
+
     return movement
 }
 
+export function parseSenses(sensesString) {
+    let senses = {
+        darkvision: 0,
+        blindsight: 0,
+        tremorsense: 0,
+        truesight: 0,
+        units: "ft",
+        special: ""
+    }
+
+    sensesString
+        .toLowerCase()
+        .split(', ')
+        .filter(s=>!s.includes("passive perception")) // Foundry calculates pp, don't store it explicitly
+        .forEach(sense => {
+            let [senseName, dist] = sense.split(' ')
+            dist = dist.match(/[0-9]+/)[0]
+            senses[senseName] = dist
+        })
+
+    return senses
+}
+
+
+export function parseLanguages(languagesString) {
+    const defaultLanguages = ["Aarakocra", "Abyssal", "Aquan", "Auran", "Celestial", "Common", "Deep Speech", "Draconic", "Druidic", "Dwarvish", "Elvish", "Giant", "Gith", "Gnoll", "Gnomish", "Goblin", "Halfling", "Ignan", "Infernal", "Orc", "Primordial", "Sylvan", "Terran", "Thieves' Cant", "Undercommon"]
+    
+    let languages = {
+        value: [],
+        custom: ""
+    }
+
+    languagesString
+        .split(', ')
+        .map(s=>s.trim()) // Remove whitespace from ends
+        .forEach(language => {
+            if (defaultLanguages.includes(language))
+                languages.value.push(language.toLowerCase())
+            else
+                languages.custom += language + ';'
+        })
+
+    // Remove final semicolon that was added as a seperator
+    languages.custom = languages.custom.replace(/;$/, "")
+
+    return languages
+}

@@ -1,4 +1,4 @@
-import {convert} from './convert.js'
+import {makeActor} from './convert.js'
 
 Hooks.on("renderActorDirectory", (app, html, data) => {
     const importStatButton = $('<button class="import-stat-button"> <i class="fas fa-camera"></i> Import Stat Block from OneNote</button>');
@@ -10,8 +10,7 @@ Hooks.on("renderActorDirectory", (app, html, data) => {
             Import: {
                 label: "Import",
                 callback: async (html) => {
-                    console.log(html.find("#input"))
-                    convert(html.find("#input")[0].value);
+                    makeActor(html.find("#input")[0].value);
                 },
             },
             Cancel: {
