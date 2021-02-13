@@ -1,23 +1,4 @@
-import { parseMovement, parseSenses, parseLanguages } from './parsing.js'
-
-// export const lineToKey = {
-//     2 : 'details.type',
-//     3 : 'traits.size',
-//     4 : 'attributes.ac.value',
-//     5 : 'attributes.hp.value',
-//     6 : 'attributes.hp.max',
-//     7 : 'attributes.hp.formula',
-//     8 : 'attributes.speed',
-//     9 : 'traits.sesnses',
-//     10 : 'details.alignment',
-//     11 : 'details.cr',
-//     12 : 'details.xp.value',
-//     13 : 'abilities.str.value',
-//     14 : 'abilities.dex.value',
-//     15 : 'abilities.con.value',
-//     16 : 'abilities.int.value',
-//     17 : 'abilities.wis.value',
-// }
+import { parseMovement, parseSenses, parseLanguages, parseTrait } from './parsing.js'
 
 // [lineNumber, [word1, word2, ..., wordn]]
 export const attrToWordIndex = {
@@ -98,7 +79,11 @@ export const attributeToKey = {
     Survival: ['skills', 'sur', 'value'],
     senses: ['attributes', 'senses'],
     cr: ['details', 'cr'],
-    languages: ['traits', 'languages']
+    languages: ['traits', 'languages'],
+    resistance: ['traits', 'dr', 'value'],
+    immunity: ['traits', 'di', 'value'],
+    vulnerability: ['traits', 'dv', 'value'],
+    conditionImmunity: ['traits', 'ci', 'value'],
 }
 
 export const startWords = {
@@ -111,12 +96,12 @@ export const startWords = {
     hpformula: ["Hit", "Points"],
     speed: ["Speed"],
     senses: ["Senses"],
-    Resistance: ["Damage", "Resistances"],
-    Immunity: ["Damage", "Immunities"],
-    Vulnerability: ["Damage", "Vulnerabilities"],
-    ConditionImmunity: ["Condition", "Immunities"],
+    resistance: ["Damage", "Resistances"],
+    immunity: ["Damage", "Immunities"],
+    vulnerability: ["Damage", "Vulnerabilities"],
+    conditionImmunity: ["Condition", "Immunities"],
     cr: ["Challenge"],
-    languages: ["Languages"]
+    languages: ["Languages"],
 }
 
 // Used to find the value you're looking for once you already have the
@@ -145,6 +130,10 @@ export const modifierFunctions = {
     int: parseInt,
     wis: parseInt,
     cha: parseInt,
+    resistance: parseTrait,
+    immunity: parseTrait,
+    vulnerability: parseTrait,
+    conditionImmunity: parseTrait
 }
 
 

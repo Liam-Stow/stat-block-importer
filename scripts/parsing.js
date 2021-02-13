@@ -10,14 +10,6 @@ export function setDeepJson(root,path,value) {
 }
 
 
-function concatJson(object1, object2) {
-    for (let key in object2) {
-        object1[key] = object2[key]
-    }
-    return object1
-}
-
-
 function arraysEqual(a,b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
@@ -54,36 +46,6 @@ export function findTextByPosition(textArray, position) {
     let words = line.filter((_, index) => wordIndicies.includes(index));
     return words.join(' ');
 }
-
-
-// function setDataFromStaticPositionText(foundryJson, lines) {
-//     let prevJson
-//     for (attributeName in attributeToKey) {
-//         let currentJson = foundryJson;
-//         let keyPath = attributeToKey[attributeName].split('.');
-//         keyPath.forEach(nextKey => {
-//             prevJson = foundryJson;
-//             currentJson = currentJson[nextKey];
-//         })
-//         prevJson[keyPath[keyPath.length-1]] = getWords(lines, attrToWordIndex[attributeName])
-//     }
-//     return prevJson;
-// }
-
-
-function saveJson(json, fileName) {
-    let a = document.createElement("a");
-    let file = new Blob([JSON.stringify(json)]);
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
-}
-
-
-function findLineByStartWord(lines, startWord) {
-    return lines.findIndex(line => line.split(' ')[0] === startWord);
-}
-
 
 // Take an array of start words like ["Armor","Class"] and return the rest of
 // the text on the first line that starts with those words (not including
@@ -213,6 +175,21 @@ export function parseSenses(sensesString) {
         })
 
     return senses
+}
+
+export function parseTrait(traitString) {
+    let traitValue = []
+
+    traitString
+        .split('; ')[0] // Ignore resistances after a ;, they will need to be treated differently.
+        .split(', ')
+        .filter(word => word !== "") // Get rid of empty words
+        .map(s => s.toLowerCase())
+        .forEach(trait => traitValue.push(trait))
+    if (traitString.includes("Bludgeoning, Piercing, and Slashing from Nonmagical Attacks"))
+        traitValue.push("physical");
+
+    return traitValue
 }
 
 
