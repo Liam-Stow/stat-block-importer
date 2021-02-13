@@ -1,5 +1,5 @@
-import { setDeepJson, findTextByPosition, findTextByStartWords, parseMovement } from './parsing.js'
-import { attributeToKey, attrToWordIndex, sizes, skillsMap, modifierFunctions, startWords, regexExpressions, traits } from './maps.js'
+import { setDeepJson, findTextByPosition, findTextByStartWords } from './parsing.js'
+import { attributeToKey, attrToWordIndex, modifierFunctions, startWords, regexExpressions } from './maps.js'
 
 const preprocess = text => {
     const lines = text
@@ -22,7 +22,6 @@ export const makeActor = async (text) => {
 const populateActor = (actor, lines) => {
     let actorData = actor.data;
 
-    // Stats: AC, HP, Movement, Size, Type, Alignment, Senses, CR, STR, DEX, CON etc...
     const setStats = (stats, finder, targetMap) => {
         stats.forEach(stat => {
             console.log("parsing", stat)
@@ -36,13 +35,23 @@ const populateActor = (actor, lines) => {
             setDeepJson(actorData.data, attributeToKey[stat], text)
         })
     }
-    setStats(['ac', 'hpval', 'hpmax', 'hpformula', 'speed', 'size', 'type', 'alignment', 'senses', 'cr', 'languages', 'resistance', 'immunity', 'vulnerability', 'conditionImmunity'], findTextByStartWords, startWords)
-    setStats(['str', 'dex', 'con', 'int', 'wis', 'cha'], findTextByPosition, attrToWordIndex)
+
+    // Stats that can be found in the stat block by searching for specific words
+    const statsByWord = ['ac', 'hpval', 'hpmax', 
+                        'hpformula', 'speed', 'size', 
+                        'type', 'alignment', 'senses', 
+                        'cr', 'languages', 'resistance', 
+                        'immunity', 'vulnerability', 'conditionImmunity']
+    setStats(statsByWord, findTextByStartWords, startWords)
+
+    // Stats that are found using the relevant text's line and column numbers in the stat block
+    const statsByPosition = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+    setStats(statsByPosition, findTextByPosition, attrToWordIndex)
 
     // Proficient Skills
     findTextByStartWords(lines, ["Skills"])
         .match(/[A-z]+/g)
         .forEach(skill => setDeepJson(actorData.data, attributeToKey[skill], 1))
-        
+
     actor.update(actorData)
 }

@@ -1,3 +1,5 @@
+// Set the value of an object nested deeply in a long JSON path, inventing
+// the path along the way if it does not exist. 
 export function setDeepJson(root,path,value) {
     if (path.length === 1) {
         root[path[0]] = value;
@@ -9,7 +11,7 @@ export function setDeepJson(root,path,value) {
     setDeepJson(root[path[0]], path.slice(1), value);
 }
 
-
+// Check if two arrays are the same
 function arraysEqual(a,b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
