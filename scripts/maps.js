@@ -69,6 +69,8 @@ export const attributeToKey = {
     conditionImmunity: ['traits', 'ci', 'value'],
 }
 
+// values hold the list of words to search for to find the stat denoted
+// by the key. eg, to find the ac value, search for "Armor Class" in text
 export const startWords = {
     size: ["Meta"], // Inserted by preprocessing
     type: ["Meta"],
@@ -77,6 +79,12 @@ export const startWords = {
     hpval: ["Hit", "Points"],
     hpmax: ["Hit", "Points"],
     hpformula: ["Hit", "Points"],
+    str : ['STR'],
+    dex : ['DEX'],
+    con : ['CON'],
+    int : ['INT'],
+    wis : ['WIS'],
+    cha : ['CHA'],
     resistance: ["Damage", "Resistances"],
     immunity: ["Damage", "Immunities"],
     vulnerability: ["Damage", "Vulnerabilities"],
@@ -85,17 +93,26 @@ export const startWords = {
 
 // Used to find the value you're looking for once you already have the
 // correct line.
+const matchNumber = /[0-9]+/
 export const regexExpressions = {
     size: /(Tiny|Small|Medium|Large|Huge|Gargantuan)/,
-    type: /\S+( \(\S+\))? ?,/,
-    alignment: /, .*/,
-    ac: /[0-9]+/,
-    hpval: /[0-9]+/,
-    hpmax: /[0-9]+/,
-    hpformula: /\(.+\)/,
-    challenge: /^[0-9]+/
+    type: /\S+( \(\S+\))? ?,/,  // Match a string, then possibly another string in (brackets), and then a comma
+    alignment: /, .*/,          // Match everything after a comma
+    ac: matchNumber,
+    hpval: matchNumber,
+    hpmax: matchNumber,
+    hpformula: /\(.+\)/,        // Match everything inside a set of brackets
+    str : matchNumber,
+    dex : matchNumber,
+    con : matchNumber,
+    int : matchNumber,
+    wis : matchNumber,
+    cha : matchNumber,
+    challenge: matchNumber,
 }
 
+// map each stat to a modifier function that takes the stat text as written
+// in the stat block and returns a value in the correct format for foundry.
 export const modifierFunctions = {
     size: i=>sizes[i],                  // Get the foundry compatible size string
     alignment: i=>i.replace(/, /,''),   // Remove comma from start of string   
@@ -118,17 +135,22 @@ export const modifierFunctions = {
 
 
 export const attackTypes = {
-    "Melee Weapon Attack" : "mwak",
-    "Ranged Weapon Attack" : "rwak",
-    "Melee Spell Attack" : "msak",
-    "Ranged Spell Attack" : "rsak",
+    'Melee Weapon Attack' : 'mwak',
+    'Ranged Weapon Attack' : 'rwak',
+    'Melee Spell Attack' : 'msak',
+    'Ranged Spell Attack' : 'rsak',
 }
 
 export const sizes = {
-    Gargantuan : "grg",
-    Huge : "huge",
-    Large : "lg",
-    Medium : "med",
-    Small : "sm",
-    Tiny : "tiny",
+    Gargantuan : 'grg',
+    Huge : 'huge',
+    Large : 'lg',
+    Medium : 'med',
+    Small : 'sm',
+    Tiny : 'tiny',
+}
+
+export const languages = {
+    'deep speech': 'deep',
+    "thieves' cant": 'cant' 
 }

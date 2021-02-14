@@ -1,11 +1,23 @@
-import { setDeepJson, findTextByPosition, findTextByStartWords } from './parsing.js'
-import { attributeToKey, attrToWordIndex, modifierFunctions, startWords, regexExpressions } from './maps.js'
+import { setDeepJson, findTextByStartWords } from './parsing.js'
+import { attributeToKey, modifierFunctions, startWords, regexExpressions } from './maps.js'
 
 const preprocess = text => {
     const lines = text
         .split('\n')
         .filter(line => line !== "" && line !== " ")  // Remove empty lines
+        .map(s=>s.trim()) // Remove edge whitespace
     lines[1] = "Meta " + lines[1] // Add a title to the meta line so it can be found later
+
+    const stats = ["STR", "DEX", "CON", "INT", "WIS", "CHA"]
+    stats.forEach(stat => {
+        const statNameIndex = lines.findIndex(s=>s===stat)
+        if (statNameIndex !== -1) {
+            const statValueIndex = statNameIndex + 1
+            lines[statNameIndex] += " " + lines[statValueIndex] // Put stat value on same line as stat name
+            lines.splice(statValueIndex, 1) // Remove the old line with the stat value
+        }
+    })
+
     return lines
 }
 
@@ -22,42 +34,34 @@ export const makeActor = async (text) => {
 const populateActor = (actor, lines) => {
     let actorData = actor.data;
 
-    // Try to map a string with a given map, otherwise just return the 
-    // text with a capatal letter at the start. This is to avoid writing
-    // a bunch of mappings that just capatalise the first letter.
-    const mapOrCapatalise = (text, map) => {
-        const mapped = map[text]
+    // Try to map a stat string with to its search term, otherwise just 
+    // return the string with a capatal letter at the start. This 
+    // is to avoid writing a bunch of mappings that just capatalise the 
+    // first letter.
+    const mapOrCapatalise = (text) => {
+        const mapped = startWords[text]
         const capatalised = text[0].toUpperCase() + text.slice(1)
         return mapped? mapped:[capatalised]
     }
 
-    const setStats = (stats, finder, targetMap) => {
-        stats.forEach(stat => {
-            console.log("parsing", stat)
-            const modifier = modifierFunctions[stat]
-            const regex = regexExpressions[stat]
-            const mappedStatTarget = mapOrCapatalise(stat, targetMap)
-            console.log("   searching for", mappedStatTarget)
-            let text = finder(lines, mappedStatTarget) // Find line of interest
-            console.log("   initial text", text)
-            if (regex) text = regex.exec(text)[0]   // Find substring of interest
-            if (modifier) text = modifier(text)     // Modify it if needed
-            console.log("   Setting", stat, "to", text)
-            setDeepJson(actorData.data, attributeToKey[stat], text)
-        })
+    const setStat = (statName) => {
+        console.log("parsing", statName)
+        const modifier = modifierFunctions[statName]
+        const regex = regexExpressions[statName]
+        const mappedStatTarget = mapOrCapatalise(statName)
+        console.log("   searching for", mappedStatTarget)
+        let text = findTextByStartWords(lines, mappedStatTarget) // Find line of interest
+        console.log("   initial text:", text)
+        if (regex) text = regex.exec(text)[0]   // Find substring of interest
+        if (modifier) text = modifier(text)     // Modify it if needed
+        console.log("   Setting", statName, "to", text)
+        setDeepJson(actorData.data, attributeToKey[statName], text)
     }
 
-    // Stats that can be found in the stat block by searching for specific words
-    const statsByWord = ['ac', 'hpval', 'hpmax', 
-                        'hpformula', 'speed', 'size', 
-                        'type', 'alignment', 'senses', 
-                        'challenge', 'languages', 'resistance', 
-                        'immunity', 'vulnerability', 'conditionImmunity', 'skills']
-    setStats(statsByWord, findTextByStartWords, startWords)
-
-    // Stats that are found using the relevant text's line and column numbers in the stat block
-    const statsByPosition = ['str', 'dex', 'con', 'int', 'wis', 'cha']
-    setStats(statsByPosition, findTextByPosition, attrToWordIndex)
+    ['ac', 'hpval', 'hpmax', 'hpformula', 'speed', 'size', 'type', 
+    'alignment', 'senses', 'challenge', 'languages', 'resistance', 
+    'immunity', 'vulnerability', 'conditionImmunity', 'skills', 'str', 
+    'dex', 'con', 'int', 'wis', 'cha'].forEach(setStat)
 
     actor.update(actorData)
 }

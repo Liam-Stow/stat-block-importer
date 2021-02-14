@@ -56,11 +56,7 @@ export function findTextByPosition(textArray, position) {
 // those words themselves).
 export function findTextByStartWords(lines, startWords) {
     const count = startWords.length;
-    // console.log("lines")
-    // console.log(lines)
     let foundLine = lines.find(line => {
-        if (arraysEqual(startWords, ["Damage","Immunities"])) {
-        }
         const words = line.split(' ');
         if (words.length >= count) {
             return arraysEqual(words.slice(0,count), startWords);
@@ -71,7 +67,8 @@ export function findTextByStartWords(lines, startWords) {
         return foundLine.split(' ')
                         .slice(count)
                         .join(' ');
-    }
+    } 
+    ui.notifications.warn("   Could not find " + startWords.join(' ') + " in stat block text!")
     return "";
 }
 
@@ -232,7 +229,7 @@ export function parseSkills(skillsString) {
         .match(/[A-z]+/g)
         .forEach(skill => setDeepJson(skills, [skillsMap[skill], "value"], 1))
 
-    // TODO: Account for expertese
+    // TODO: Account for expertise
 
     return skills
 }
