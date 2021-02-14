@@ -1,4 +1,4 @@
-import { parseMovement, parseSenses, parseLanguages, parseTrait } from './parsing.js'
+import { parseMovement, parseSenses, parseLanguages, parseTrait, parseSkills } from './parsing.js'
 
 // [lineNumber, [word1, word2, ..., wordn]]
 export const attrToWordIndex = {
@@ -17,24 +17,24 @@ export const attrToWordIndex = {
 }
 
 export const skillsMap = {
-    Acrobatics : 'acr',
-    'Animal Handling' : 'ani',
-    Arcana : 'arc',
-    Athletics : 'ath',
-    Deception : 'dec',
-    History : 'his',
-    Insight : 'ins',
-    Intimidation : 'itm',
-    Investigation : 'inv',
-    Medicine : 'med',
-    Nature : 'nat',
-    Perception : 'prc',
-    Performance : 'prf',
-    Persuasion : 'per',
-    Religion : 'rel',
-    'Sleight of Hand' : 'slt',
-    Stealth : 'ste',
-    Survival  : 'sur',
+    acrobatics : 'acr',
+    'animal handling' : 'ani',
+    arcana : 'arc',
+    athletics : 'ath',
+    deception : 'dec',
+    history : 'his',
+    insight : 'ins',
+    intimidation : 'itm',
+    investigation : 'inv',
+    medicine : 'med',
+    nature : 'nat',
+    perception : 'prc',
+    performance : 'prf',
+    persuasion : 'per',
+    religion : 'rel',
+    'sleight of hand' : 'slt',
+    stealth : 'ste',
+    survival  : 'sur',
 }
 
 export const traits = {
@@ -59,26 +59,9 @@ export const attributeToKey = {
     int : ['abilities','int','value'],
     wis : ['abilities','wis','value'],
     cha : ['abilities','cha','value'],
-    Acrobatics: ['skills', 'acr', 'value'],
-    Animal: ['skills', 'ani', 'value'],
-    Arcana: ['skills', 'arc', 'value'],
-    Athletics: ['skills', 'ath', 'value'],
-    Deception: ['skills', 'dec', 'value'],
-    History: ['skills', 'his', 'value'],
-    Insight: ['skills', 'ins', 'value'],
-    Intimidation: ['skills', 'itm', 'value'],
-    Investigation: ['skills', 'inv', 'value'],
-    Medicine: ['skills', 'med', 'value'],
-    Nature: ['skills', 'nat', 'value'],
-    Perception: ['skills', 'prc', 'value'],
-    Performance: ['skills', 'prf', 'value'],
-    Persuasion: ['skills', 'per', 'value'],
-    Religion: ['skills', 'rel', 'value'],
-    Sleight: ['skills', 'slt', 'value'],
-    Stealth: ['skills', 'ste', 'value'],
-    Survival: ['skills', 'sur', 'value'],
+    skills: ['skills'],
     senses: ['attributes', 'senses'],
-    cr: ['details', 'cr'],
+    challenge: ['details', 'cr'],
     languages: ['traits', 'languages'],
     resistance: ['traits', 'dr', 'value'],
     immunity: ['traits', 'di', 'value'],
@@ -94,14 +77,10 @@ export const startWords = {
     hpval: ["Hit", "Points"],
     hpmax: ["Hit", "Points"],
     hpformula: ["Hit", "Points"],
-    speed: ["Speed"],
-    senses: ["Senses"],
     resistance: ["Damage", "Resistances"],
     immunity: ["Damage", "Immunities"],
     vulnerability: ["Damage", "Vulnerabilities"],
     conditionImmunity: ["Condition", "Immunities"],
-    cr: ["Challenge"],
-    languages: ["Languages"],
 }
 
 // Used to find the value you're looking for once you already have the
@@ -114,7 +93,7 @@ export const regexExpressions = {
     hpval: /[0-9]+/,
     hpmax: /[0-9]+/,
     hpformula: /\(.+\)/,
-    cr: /^[0-9]+/
+    challenge: /^[0-9]+/
 }
 
 export const modifierFunctions = {
@@ -133,7 +112,8 @@ export const modifierFunctions = {
     resistance: parseTrait,
     immunity: parseTrait,
     vulnerability: parseTrait,
-    conditionImmunity: parseTrait
+    conditionImmunity: parseTrait,
+    skills: parseSkills
 }
 
 

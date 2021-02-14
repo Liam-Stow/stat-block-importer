@@ -22,12 +22,23 @@ export const makeActor = async (text) => {
 const populateActor = (actor, lines) => {
     let actorData = actor.data;
 
+    // Try to map a string with a given map, otherwise just return the 
+    // text with a capatal letter at the start. This is to avoid writing
+    // a bunch of mappings that just capatalise the first letter.
+    const mapOrCapatalise = (text, map) => {
+        const mapped = map[text]
+        const capatalised = text[0].toUpperCase() + text.slice(1)
+        return mapped? mapped:[capatalised]
+    }
+
     const setStats = (stats, finder, targetMap) => {
         stats.forEach(stat => {
             console.log("parsing", stat)
             const modifier = modifierFunctions[stat]
             const regex = regexExpressions[stat]
-            let text = finder(lines, targetMap[stat]) // Find line of interest
+            const mappedStatTarget = mapOrCapatalise(stat, targetMap)
+            console.log("   searching for", mappedStatTarget)
+            let text = finder(lines, mappedStatTarget) // Find line of interest
             console.log("   initial text", text)
             if (regex) text = regex.exec(text)[0]   // Find substring of interest
             if (modifier) text = modifier(text)     // Modify it if needed
@@ -40,18 +51,13 @@ const populateActor = (actor, lines) => {
     const statsByWord = ['ac', 'hpval', 'hpmax', 
                         'hpformula', 'speed', 'size', 
                         'type', 'alignment', 'senses', 
-                        'cr', 'languages', 'resistance', 
-                        'immunity', 'vulnerability', 'conditionImmunity']
+                        'challenge', 'languages', 'resistance', 
+                        'immunity', 'vulnerability', 'conditionImmunity', 'skills']
     setStats(statsByWord, findTextByStartWords, startWords)
 
     // Stats that are found using the relevant text's line and column numbers in the stat block
     const statsByPosition = ['str', 'dex', 'con', 'int', 'wis', 'cha']
     setStats(statsByPosition, findTextByPosition, attrToWordIndex)
-
-    // Proficient Skills
-    findTextByStartWords(lines, ["Skills"])
-        .match(/[A-z]+/g)
-        .forEach(skill => setDeepJson(actorData.data, attributeToKey[skill], 1))
 
     actor.update(actorData)
 }

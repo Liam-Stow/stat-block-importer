@@ -1,3 +1,5 @@
+import { skillsMap } from './maps.js'
+
 // Set the value of an object nested deeply in a long JSON path, inventing
 // the path along the way if it does not exist. 
 export function setDeepJson(root,path,value) {
@@ -179,11 +181,13 @@ export function parseSenses(sensesString) {
     return senses
 }
 
+
+// Parses a line of Resistances, Immunities or Vulnerabilities
 export function parseTrait(traitString) {
     let traitValue = []
 
     traitString
-        .split('; ')[0] // Ignore resistances after a ;, they will need to be treated differently.
+        .split('; ')[0] // Ignore traits after a ;, they will need to be treated differently.
         .split(', ')
         .filter(word => word !== "") // Get rid of empty words
         .map(s => s.toLowerCase())
@@ -217,4 +221,18 @@ export function parseLanguages(languagesString) {
     languages.custom = languages.custom.replace(/;$/, "")
 
     return languages
+}
+
+
+export function parseSkills(skillsString) {
+    let skills={}
+
+    skillsString
+        .toLowerCase()
+        .match(/[A-z]+/g)
+        .forEach(skill => setDeepJson(skills, [skillsMap[skill], "value"], 1))
+
+    // TODO: Account for expertese
+
+    return skills
 }
