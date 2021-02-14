@@ -43,7 +43,7 @@ function getFirstWords(str, numberOfWords, endTrim=0) {
 
 // given an array of text lines and a [lineNumber, [word1, word2]] position array,
 // make a string of the selected words. 
-export function findTextByPosition(textArray, position) {
+function findTextByPosition(textArray, position) {
     let lineIndicies = position[0];
     let wordIndicies = position[1];
     let line = textArray[lineIndicies].split(' ');
@@ -68,7 +68,7 @@ export function findTextByStartWords(lines, startWords) {
                         .slice(count)
                         .join(' ');
     } 
-    ui.notifications.warn("   Could not find " + startWords.join(' ') + " in stat block text!")
+    ui.notifications.info("   No " + startWords.join(' ') + " found in stat block text")
     return "";
 }
 
@@ -86,7 +86,7 @@ function isUpperCase(char) {
 }
 
 // Check if an action is an attack from its details string
-function isAttack(detailsString) {
+export function isAttack(detailsString) {
     return isAttackType(getFirstWords(detailsString, 3, 1));
 }
 
@@ -98,35 +98,44 @@ function isAttackType(str) {
 
 
 // Check if a line starts a new character feature
-// line is a string, returns bool
-function lineStartsFeature(line) {
-    if (line.length === 1) return false;
-    return  ((getLastItem(line[0]) === '.' && isUpperCase(line[0][0])) 
-            || 
-            (getLastItem(line[1]) === '.')  && isUpperCase(line[1][0]));
+// line is a string, returns title of feat if it exists, undefined otherwise
+function findFeatTitle(line) {
+    const capatalisedWord = '[A-Z][a-z]*'
+    const capatalisedWords = '(' + capatalisedWord + ' ?)+'
+    const maybeTag = '(\\(' + capatalisedWord + '\\))?'
+    const maybeRecharge = '(\\(Recharge \\d-\\d\\))?'
+    // const featTitleRegex = /^[A-Z][a-z] ?([A-Z][a-z]* ?)+\./
+    const featTitleRegex = RegExp('^' + capatalisedWords + maybeTag + maybeRecharge + '\\.')
+    const results = line.match(featTitleRegex)
+    if (results){
+        return results[0].replace(/.$/,'') // return first result without the dot
+    }
+    return undefined
+    // return  ((getLastItem(line[0]) === '.' && isUpperCase(line[0][0])) 
+    //         || 
+    //         (getLastItem(line[1]) === '.')  && isUpperCase(line[1][0]));
 }
 
 
 // Takes in the entire block of abilities or actions and gives back an object of feature name to feature description.
-function readFeatures(featuresLines) {
-    let features = {};
-    let featureName = "";
-    let featureDescription = "";
+export function readFeatures(featuresLines) {
+    let features = {}
+    let featName = ""
+    let featureDescription = ""
     featuresLines.forEach(line => {
-        let words = line.split(' ');
-        if  (lineStartsFeature(words)) {
-            if (featureName !== "")
-                features[featureName] = featureDescription;
-            const NAME_END_INDEX = line.indexOf('.'); // Get the index of the first dot
-            featureName = line.slice(0,NAME_END_INDEX); // chars before first dot
-            featureDescription = line.slice(NAME_END_INDEX+2); // chars after first dot and space
+        const newFeatName = findFeatTitle(line)
+        if  (newFeatName) {
+            if (featName !== "")
+                features[featName] = featureDescription
+            featName = newFeatName
+            featureDescription = line.slice(featName.length+2) // text after the feat name and dot
         } else {                
-            featureDescription += line;
+            featureDescription += line
         }
     });
-    features[featureName] = featureDescription;
+    features[featName] = featureDescription
 
-    return features;
+    return features
 }
 
 export function parseMovement(movementString) {

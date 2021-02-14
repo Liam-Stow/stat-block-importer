@@ -1,13 +1,17 @@
-import { setDeepJson, findTextByStartWords } from './parsing.js'
+import { setDeepJson, findTextByStartWords, readFeatures, isAttack } from './parsing.js'
 import { attributeToKey, modifierFunctions, startWords, regexExpressions } from './maps.js'
 
 const preprocess = text => {
     const lines = text
+        .replace(/–/g, '-')                             // Replace all Ascii 150 with Ascii 45
         .split('\n')
-        .filter(line => line !== "" && line !== " ")  // Remove empty lines
-        .map(s=>s.trim()) // Remove edge whitespace
-    lines[1] = "Meta " + lines[1] // Add a title to the meta line so it can be found later
+        .filter(line => line !== "" && line !== " ")    // Remove empty lines
+        .map(s=>s.trim())                               // Remove edge whitespace
+    
+    // Add a title to the meta line (size, type, alignment) so it can be found later
+    lines[1] = "Meta " + lines[1] 
 
+    // Put three letter attribute title on same line as its value
     const stats = ["STR", "DEX", "CON", "INT", "WIS", "CHA"]
     stats.forEach(stat => {
         const statNameIndex = lines.findIndex(s=>s===stat)
@@ -26,12 +30,14 @@ export const makeActor = async (text) => {
     const lines = preprocess(text)
     let actorPromise = Actor.create({ name: lines[0], type: "npc" })
     actorPromise.then(actor => {
-        populateActor(actor, lines)
+        setStats(actor, lines)
+        setFeats(actor, lines)
+
     })
 }
 
 
-const populateActor = (actor, lines) => {
+const setStats = (actor, lines) => {
     let actorData = actor.data;
 
     // Try to map a stat string with to its search term, otherwise just 
@@ -45,16 +51,12 @@ const populateActor = (actor, lines) => {
     }
 
     const setStat = (statName) => {
-        console.log("parsing", statName)
         const modifier = modifierFunctions[statName]
         const regex = regexExpressions[statName]
         const mappedStatTarget = mapOrCapatalise(statName)
-        console.log("   searching for", mappedStatTarget)
         let text = findTextByStartWords(lines, mappedStatTarget) // Find line of interest
-        console.log("   initial text:", text)
         if (regex) text = regex.exec(text)[0]   // Find substring of interest
         if (modifier) text = modifier(text)     // Modify it if needed
-        console.log("   Setting", statName, "to", text)
         setDeepJson(actorData.data, attributeToKey[statName], text)
     }
 
@@ -64,4 +66,33 @@ const populateActor = (actor, lines) => {
     'dex', 'con', 'int', 'wis', 'cha'].forEach(setStat)
 
     actor.update(actorData)
+}
+
+
+const setFeats = (actor, lines) => {
+    const featsStartLine = lines.findIndex(s=>s.toLowerCase().match(/proficiency bonus/))
+    const actionsStartLine = lines.findIndex(s=>s.toLowerCase()==="actions")
+
+    const feats = readFeatures(lines.slice(featsStartLine))
+    console.log(feats)
+
+    for(const featKey in feats) {
+        const description = feats[featKey]
+        const featType = isAttack(description)? 'weapon':'feat'
+        console.log("making", featKey, "a", featType)
+        actor.createOwnedItem({name: featKey, type: featType, data: {description: {value: description}}})
+    }
+
+}
+
+const setActions = (actor, lines) => {
+    const actionsStartLine = lines.find(s=>s.toLowerCase()==="actions")
+    const actionsLines = lines.slice(actionsStartLine)
+    const actions = readFeatures(actionsLines)
+
+    for(const actionKey in actions) {
+        const actionDescription = actions[actionKey]
+        const actionType = isAttack(actionDescription)? 'weapon':'feat'
+        actor.createOwnedItem({name: actionKey, type: actionType})
+    }
 }
