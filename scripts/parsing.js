@@ -40,17 +40,6 @@ function getFirstWords(str, numberOfWords, endTrim=0) {
     return trimEnds(firstWords, 0, endTrim);
 }
 
-
-// given an array of text lines and a [lineNumber, [word1, word2]] position array,
-// make a string of the selected words. 
-function findTextByPosition(textArray, position) {
-    let lineIndicies = position[0];
-    let wordIndicies = position[1];
-    let line = textArray[lineIndicies].split(' ');
-    let words = line.filter((_, index) => wordIndicies.includes(index));
-    return words.join(' ');
-}
-
 // Take an array of start words like ["Armor","Class"] and return the rest of
 // the text on the first line that starts with those words (not including
 // those words themselves).
@@ -70,19 +59,6 @@ export function findTextByStartWords(lines, startWords) {
     } 
     ui.notifications.info("   No " + startWords.join(' ') + " found in stat block text")
     return "";
-}
-
-function getLastItem(indexable) {
-    return indexable[indexable.length-1];
-}
-
-
-function isUpperCase(char) {
-    if (!isNaN(char*1))
-        return false; // character is a number
-    if (char === char.toLowerCase())
-        return false; // character is lower case
-    return true; // passed both checks, its upper case
 }
 
 // Check if an action is an attack from its details string
@@ -111,9 +87,6 @@ function findFeatTitle(line) {
         return results[0].replace(/.$/,'') // return first result without the dot
     }
     return undefined
-    // return  ((getLastItem(line[0]) === '.' && isUpperCase(line[0][0])) 
-    //         || 
-    //         (getLastItem(line[1]) === '.')  && isUpperCase(line[1][0]));
 }
 
 

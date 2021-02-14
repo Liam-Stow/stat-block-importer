@@ -71,7 +71,6 @@ const setStats = (actor, lines) => {
 
 const setFeats = (actor, lines) => {
     const featsStartLine = lines.findIndex(s=>s.toLowerCase().match(/proficiency bonus/))
-    const actionsStartLine = lines.findIndex(s=>s.toLowerCase()==="actions")
 
     const feats = readFeatures(lines.slice(featsStartLine))
     console.log(feats)
@@ -83,16 +82,4 @@ const setFeats = (actor, lines) => {
         actor.createOwnedItem({name: featKey, type: featType, data: {description: {value: description}}})
     }
 
-}
-
-const setActions = (actor, lines) => {
-    const actionsStartLine = lines.find(s=>s.toLowerCase()==="actions")
-    const actionsLines = lines.slice(actionsStartLine)
-    const actions = readFeatures(actionsLines)
-
-    for(const actionKey in actions) {
-        const actionDescription = actions[actionKey]
-        const actionType = isAttack(actionDescription)? 'weapon':'feat'
-        actor.createOwnedItem({name: actionKey, type: actionType})
-    }
 }
