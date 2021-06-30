@@ -44,21 +44,28 @@ function getFirstWords(str, numberOfWords, endTrim=0) {
 // the text on the first line that starts with those words (not including
 // those words themselves).
 export function findTextByStartWords(lines, startWords) {
-    const count = startWords.length;
-    let foundLine = lines.find(line => {
-        const words = line.split(' ');
-        if (words.length >= count) {
-            return arraysEqual(words.slice(0,count), startWords);
-        }
-        return false;
-    })
+    const wordsCount = startWords.length;
+    const foundLine = lines[findIndexByStartWords(lines,startWords)];
     if (foundLine != undefined) {
         return foundLine.split(' ')
-                        .slice(count)
+                        .slice(wordsCount)
                         .join(' ');
     } 
-    ui.notifications.info("   No " + startWords.join(' ') + " found in stat block text")
+    ui.notifications.info("No " + startWords.join(' ') + " found in stat block text")
     return "";
+}
+
+// Take an array of start words like ["Armor","Class"] and return the index
+// of the first line that starts with those words.
+export function findIndexByStartWords(lines, startWords) {
+    const wordsCount = startWords.length;
+    return lines.findIndex(line => {
+        const words = line.split(' ');
+        if (words.length >= wordsCount) {
+            return arraysEqual(words.slice(0,wordsCount), startWords);
+        }
+        return false;
+    });
 }
 
 // Check if an action is an attack from its details string

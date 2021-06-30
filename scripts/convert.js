@@ -1,4 +1,4 @@
-import { setDeepJson, findTextByStartWords, readFeatures, isAttack } from './parsing.js'
+import { setDeepJson, findTextByStartWords, findIndexByStartWords, readFeatures, isAttack } from './parsing.js'
 import { attributeToKey, modifierFunctions, startWords, regexExpressions } from './maps.js'
 
 const preprocess = text => {
@@ -17,8 +17,8 @@ const preprocess = text => {
         const statNameIndex = lines.findIndex(s=>s===stat)
         if (statNameIndex !== -1) {
             const statValueIndex = statNameIndex + 1
-            lines[statNameIndex] += " " + lines[statValueIndex] // Put stat value on same line as stat name
-            lines.splice(statValueIndex, 1) // Remove the old line with the stat value
+            lines[statNameIndex] += " " + lines[statValueIndex] 
+            lines.splice(statValueIndex, 1)
         }
     })
 
@@ -28,17 +28,13 @@ const preprocess = text => {
 
 export const makeActor = async (text) => {
     const lines = preprocess(text)
-    let actorPromise = Actor.create({ name: lines[0], type: "npc" })
-    actorPromise.then(actor => {
-        setStats(actor, lines)
-        setFeats(actor, lines)
-
-    })
+    let actor = await makeActorWithStats(lines);
+    //setFeats(actor, lines);
 }
 
 
-const setStats = (actor, lines) => {
-    let actorData = actor.data;
+const makeActorWithStats = async (lines) => {
+    let actorData = {};
 
     // Try to map a stat string with to its search term, otherwise just 
     // return the string with a capatal letter at the start. This 
@@ -57,7 +53,7 @@ const setStats = (actor, lines) => {
         let text = findTextByStartWords(lines, mappedStatTarget) // Find line of interest
         if (regex) text = regex.exec(text)[0]   // Find substring of interest
         if (modifier) text = modifier(text)     // Modify it if needed
-        setDeepJson(actorData.data, attributeToKey[statName], text)
+        setDeepJson(actorData, attributeToKey[statName], text)
     }
 
     ['ac', 'hpval', 'hpmax', 'hpformula', 'speed', 'size', 'type', 
@@ -65,12 +61,16 @@ const setStats = (actor, lines) => {
     'immunity', 'vulnerability', 'conditionImmunity', 'skills', 'str', 
     'dex', 'con', 'int', 'wis', 'cha'].forEach(setStat)
 
-    actor.update(actorData)
+    return await Actor.create({
+        name: lines[0],
+        type: "npc",
+        data: actorData
+    });
 }
 
 
 const setFeats = (actor, lines) => {
-    const featsStartLine = lines.findIndex(s=>s.toLowerCase().match(/proficiency bonus/))
+    const featsStartLine = findIndexByStartWords(lines, "Challenge")+1;
 
     const feats = readFeatures(lines.slice(featsStartLine))
     console.log(feats)
@@ -79,7 +79,7 @@ const setFeats = (actor, lines) => {
         const description = feats[featKey]
         const featType = isAttack(description)? 'weapon':'feat'
         console.log("making", featKey, "a", featType)
-        actor.createOwnedItem({name: featKey, type: featType, data: {description: {value: description}}})
+        actor.createEmbeddedDocuments("Item", {name: featKey, type: featType, 'data.description.value': description})
     }
 
 }
