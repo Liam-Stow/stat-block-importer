@@ -1,21 +1,5 @@
 import { parseMovement, parseSenses, parseLanguages, parseTrait, parseSkills } from './parsing.js'
 
-// [lineNumber, [word1, word2, ..., wordn]]
-export const attrToWordIndex = {
-    name : [0,[0]],
-    ac : [2,[2]],
-    hpval : [3,[2]],
-    hpmax : [3,[2]],
-    hpformula : [3,[3,4,5]],
-    speed : [4,[1]],
-    str : [6,[0]],
-    dex : [8,[0]],
-    con : [10,[0]],
-    int : [12,[0]],
-    wis : [14,[0]],
-    cha : [16,[0]],
-}
-
 export const skillsMap = {
     acrobatics : 'acr',
     'animal handling' : 'ani',

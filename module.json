@@ -10,7 +10,8 @@
       "scripts/setup.js",
       "scripts/convert.js",
       "scripts/maps.js",
-      "scripts/parsing.js"
+      "scripts/parsing.js",
+      "scripts/searching.js"
     ],
     "styles": [
       "styles/styles.css"

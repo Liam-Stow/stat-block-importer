@@ -1,4 +1,4 @@
-import { setDeepJson, findTextByStartWords, findIndexByStartWords, readFeatures, isAttack } from './parsing.js'
+import { findTextByStartWords, findIndexByStartWords, readFeatures, isAttack } from './searching.js'
 import { attributeToKey, modifierFunctions, startWords, regexExpressions } from './maps.js'
 
 const preprocess = text => {
@@ -25,6 +25,18 @@ const preprocess = text => {
     return lines
 }
 
+// Set the value of an object nested deeply in a long JSON path, inventing
+// the path along the way if it does not exist. 
+export function setDeepJson(root,path,value) {
+    if (path.length === 1) {
+        root[path[0]] = value;
+        return;
+    }
+    if (!root.hasOwnProperty(path[0])) {
+        root[path[0]] = {};
+    }
+    setDeepJson(root[path[0]], path.slice(1), value);
+}
 
 export const makeActor = async (text) => {
     const lines = preprocess(text)
@@ -32,15 +44,14 @@ export const makeActor = async (text) => {
     setFeats(actor, lines);
 }
 
-
 const makeActorWithStats = async (lines) => {
     let actorData = {};
 
-    // Try to map a stat string with to its search term, otherwise just 
+    // Try to map a stat string to its search term, otherwise just 
     // return the string with a capatal letter at the start. This 
     // is to avoid writing a bunch of mappings that just capatalise the 
     // first letter.
-    const mapOrCapatalise = (text) => {
+    const getSearchTerm = (text) => {
         const mapped = startWords[text]
         const capatalised = text[0].toUpperCase() + text.slice(1)
         return mapped? mapped:[capatalised]
@@ -49,8 +60,8 @@ const makeActorWithStats = async (lines) => {
     const setStat = (statName) => {
         const modifier = modifierFunctions[statName]
         const regex = regexExpressions[statName]
-        const mappedStatTarget = mapOrCapatalise(statName)
-        let text = findTextByStartWords(lines, mappedStatTarget) // Find line of interest
+        const searchTerm = getSearchTerm(statName)
+        let text = findTextByStartWords(lines, searchTerm) // Find line of interest
         if (regex) text = regex.exec(text)[0]   // Find substring of interest
         if (modifier) text = modifier(text)     // Modify it if needed
         setDeepJson(actorData, attributeToKey[statName], text)
