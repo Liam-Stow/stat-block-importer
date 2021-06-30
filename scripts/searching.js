@@ -86,6 +86,7 @@ export function readFeatures(featuresLines) {
     let featName = ""
     let featureDescription = ""
     featuresLines.forEach(line => {
+        if (line === "ACTIONS") return // in a forEach(), return works like continue
         const newFeatName = findFeatTitle(line)
         if  (newFeatName) {
             if (featName !== "")
@@ -93,7 +94,7 @@ export function readFeatures(featuresLines) {
             featName = newFeatName
             featureDescription = line.slice(featName.length+2) // text after the feat name and dot
         } else {                
-            featureDescription += line
+            featureDescription += " " + line
         }
     });
     features[featName] = featureDescription
