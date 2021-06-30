@@ -4,8 +4,8 @@
     "description": "Lets you take a photo of a dnd5e stat block using Microsoft OneNote, recognise the text and import the NPC to Foundry.",
     "author": "Liam Stow",
     "version": "1.0.0",
-    "minimumCoreVersion": "0.7.6",
-    "compatibleCoreVersion": "0.7.6",
+    "minimumCoreVersion": "0.8.0",
+    "compatibleCoreVersion": "0.8.8",
     "esmodules": [
       "scripts/setup.js",
       "scripts/convert.js",
