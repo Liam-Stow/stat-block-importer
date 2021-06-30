@@ -29,7 +29,7 @@ const preprocess = text => {
 export const makeActor = async (text) => {
     const lines = preprocess(text)
     let actor = await makeActorWithStats(lines);
-    //setFeats(actor, lines);
+    setFeats(actor, lines);
 }
 
 
@@ -79,7 +79,7 @@ const setFeats = (actor, lines) => {
         const description = feats[featKey]
         const featType = isAttack(description)? 'weapon':'feat'
         console.log("making", featKey, "a", featType)
-        actor.createEmbeddedDocuments("Item", {name: featKey, type: featType, 'data.description.value': description})
+        actor.createEmbeddedDocuments("Item", [{name: featKey, type: featType, 'data.description.value': description}])
     }
 
 }

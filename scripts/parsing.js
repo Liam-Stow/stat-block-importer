@@ -135,9 +135,10 @@ export function parseMovement(movementString) {
         .forEach(speedString => {
             let pair = speedString.split(' ')
             if (pair.length > 1) {
-                movement[pair[0]] = pair[1]
+                movement[pair[0]] = parseFloat(pair[1])
             } else {
-                movement.walk = pair[0]
+                pair[0] = 
+                movement.walk = parseFloat(pair[0])
             }
         })
 
@@ -161,7 +162,7 @@ export function parseSenses(sensesString) {
         .forEach(sense => {
             let [senseName, dist] = sense.split(' ')
             dist = dist.match(/[0-9]+/)[0]
-            senses[senseName] = dist
+            senses[senseName] = parseFloat(dist)
         })
 
     return senses
