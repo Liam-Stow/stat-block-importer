@@ -25,6 +25,12 @@ function getFirstWords(str, numberOfWords, endTrim=0) {
     return trimEnds(firstWords, 0, endTrim);
 }
 
+// Return the first words of a string up to but not including the first occurance of endWord
+function getWordsUpTo(str, ...endWords) {
+    const endWordIndex = str.split(' ').findIndex(word=>endWords.includes(word))
+    return getFirstWords(str, endWordIndex)
+}
+
 // Take an array of start words like ["Armor","Class"] and return the rest of
 // the text on the first line that starts with those words (not including
 // those words themselves).
@@ -55,12 +61,21 @@ export function findIndexByStartWords(lines, startWords) {
 
 // Check if an action is an attack from its details string
 export function isAttack(detailsString) {
-    return isAttackType(getFirstWords(detailsString, 3, 1));
+    console.log(getWordsUpTo(detailsString, "Attack", "Attack:"));
+    // Check words up to "Attack" or "Attack:" because text extraction often misses the :
+    return isAttackType(getWordsUpTo(detailsString, "Attack", "Attack:"));
 }
-
+ 
 // returns true if str is a type of attack
 function isAttackType(str) {
-    const ATTACK_TYPES = ["Melee Weapon Attack", "Ranged Weapon Attack", "Melee Spell Attack", "Ranged Spell Attack"];
+    const ATTACK_TYPES = [
+        "Melee Weapon", 
+        "Ranged Weapon", 
+        "Melee Spell", 
+        "Ranged Spell", 
+        "Melee or Ranged Weapon", 
+        "Melee or Ranged Spell"
+    ];
     return ATTACK_TYPES.includes(str);
 }
 
@@ -71,7 +86,7 @@ function findFeatTitle(line) {
     const capatalisedWords = '(' + capatalisedWord + ' ?)+'
     const maybeTag = '(\\(' + capatalisedWord + '\\))?'
     const maybeRecharge = '(\\(Recharge \\d-\\d\\))?'
-    // const featTitleRegex = /^[A-Z][a-z] ?([A-Z][a-z]* ?)+\./
+    // featTitleRegex is /^[A-Z][a-z] ?([A-Z][a-z]* ?)+\./
     const featTitleRegex = RegExp('^' + capatalisedWords + maybeTag + maybeRecharge + '\\.')
     const results = line.match(featTitleRegex)
     if (results){
