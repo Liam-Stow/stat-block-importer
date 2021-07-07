@@ -41,7 +41,7 @@ export function setDeepJson(root,path,value) {
 export const makeActor = async (text) => {
     const lines = preprocess(text)
     let actor = await makeActorWithStats(lines);
-    setFeats(actor, lines);
+    await setFeats(actor, lines);
 }
 
 const makeActorWithStats = async (lines) => {
@@ -80,7 +80,7 @@ const makeActorWithStats = async (lines) => {
 }
 
 
-const setFeats = (actor, lines) => {
+const setFeats = async (actor, lines) => {
     const featsStartLine = findIndexByStartWords(lines, "Challenge")+1;
 
     const feats = readFeatures(lines.slice(featsStartLine))
@@ -90,7 +90,30 @@ const setFeats = (actor, lines) => {
         const description = feats[featKey]
         const featType = isAttack(description)? 'weapon':'feat'
         console.log("making", featKey, "a", featType)
-        actor.createEmbeddedDocuments("Item", [{name: featKey, type: featType, 'data.description.value': description}])
+
+        const success = await AddDocumentFromCompendium(actor, featKey, featType)
+
+        if (!success) 
+            actor.createEmbeddedDocuments("Item", [{name: featKey, type: featType, 'data.description.value': description}])
     }
 
+}
+
+
+// featType either "weapon" or "feat". Returns true on success, false on failure
+const AddDocumentFromCompendium = async (actor, itemName, featType) => {
+    const packName = featType == "weapon" ? "dnd5e.items" : "dnd5e.monsterfeatures"
+    const pack = await game.packs.get(packName)
+    const index = await pack.index.getName(itemName)
+
+    if (index === undefined) return false
+
+    const item = await pack.getDocument(index._id)
+    await actor.update({"items": [item]})
+
+    // Make actor proficient with item if its a weapon
+    if (featType === "weapon")
+        await actor.updateEmbeddedDocuments("Item", [{_id: index._id, data: {equipped: true, proficient: true}}])
+
+    return true
 }
